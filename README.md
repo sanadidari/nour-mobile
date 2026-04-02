@@ -1,65 +1,32 @@
-# NOUR - Mobile Enterprise Solution for Professional Missions
+# ⚖️ WITI Field (NOUR) - Digital Infrastructure for Institutional Bailiffs
 
-[![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-[![Architecture](https://img.shields.io/badge/Architecture-Feature--Driven-blue?style=for-the-badge)](https://flutter.dev)
+**WITI Field** (codename: **NOUR**) is the specialized professional mobile ecosystem developed for the **Regional Council of Bailiffs** (Court of Appeal of Tetouan, Morocco). 
 
-**NOUR** is a high-performance, enterprise-grade mobile application built with Flutter. It's designed to manage professional missions, dashboards, and complex user workflows with a focus on modularity, scalability, and maintainability.
-
----
-
-## 🏗️ Architecture: Feature-Driven Design
-
-As a senior-led project, NOUR follows a **Feature-Driven Architecture**. This approach ensures that the codebase remains organized and scalable as the project grows, allowing for independent development and testing of different application modules.
-
--   **`core/`**: Contains shared components, utilities, themes, and base classes used across the entire application.
--   **`features/`**: Each feature (Auth, Dashboard, Missions, Profile) is self-contained with its own logic, UI, and data models.
--   **`services/`**: Centralized logic for API interactions, local storage, and third-party integrations.
--   **`models/`**: Strongly-typed data structures ensuring type safety throughout the app.
+Currently in live field-testing, it bridges the gap between official judicial missions and modern high-trust digital documentation.
 
 ---
 
-## 🚀 Key Features
+## 🏗️ Institutional Mission Management
 
--   **Modular Mission Management**: Interactive dashboard to track and manage professional missions in real-time.
--   **Advanced Authentication**: Secure login flow with state management integration.
--   **Professional Dashboard**: Visual data representation for business-critical insights.
--   **Service-Oriented Logic**: Decoupled business logic from UI using robust service patterns.
--   **Multi-environment Support**: Ready for production-scale deployments.
-
----
-
-## 🛠️ Tech Stack
-
--   **Frontend**: [Flutter](https://flutter.dev/) (latest stable) / Dart.
--   **State Management**: Provider / Riverpod (Clean state separation).
--   **Theme Engine**: Custom "Crystal Gold" navigation experience for professional institutional aesthetics.
--   **Data layer**: REST API integration with robust error handling and local caching.
+Designed for high accountability, **WITI Field** digitizes the traditionally manual workflow of institutional agents:
+- **Mission Lifecycle Control**: End-to-end management from assignment to certification.
+- **Evidence Verification**: Real-time integration with **WITI Certify (QRPRUF)** protocols for GPS & Timestamp validation.
+- **Institutional Branding**: Custom "Crystal Gold" design system tailored for official court environments, favoring clarity and institutional authority.
 
 ---
 
-## 📈 Senior Engineering Highlights
+## 🛠️ Engineering Excellence
 
--   **Clean Code**: Strict adherence to SOLID principles and Clean Architecture patterns.
--   **Scalability**: Built to handle complex feature expansions without technical debt accumulation.
--   **Custom Tooling**: Custom scripts for data extraction, logo processing, and automated refactoring included in the repository.
-
----
-
-## ⚙️ Getting Started
-
-### Prerequisites
-
--   Flutter SDK (stable channel)
--   Dart SDK
-
-### Installation
-
-1.  Clone the repository.
-2.  Run `flutter pub get`.
-3.  Ensure your environment keys are set up in a local `.env` file (see `.env.example`).
-4.  Launch the app: `flutter run`.
+- **Architecture**: **Feature-Driven Flutter Architecture** with **Riverpod** for robust, declarative state management.
+- **OCR Intelligence**: Integration of **Google ML Kit Document Scanner** for automated data extraction from legal papers.
+- **Backend Architecture**: Leveraging **Supabase Real-time** with advanced **Roll-Level Security (RLS)** for multi-tenant institutional privacy.
+- **Data Integrity**: Local caching strategies with background synchronization to ensure no data loss in low-connectivity field areas.
 
 ---
 
-### 👨‍💻 Developer Note
-*This project was developed with a focus on high-end mobile engineering standards, utilizing modern Flutter patterns and an AI-assisted development workflow for maximum efficiency and code quality.*
+## 🚀 Part of the WITI Ecosystem
+
+**WITI Field** serves as the mobile data collection layer, orchestrated by the **WITI Governance Engine** and verified via the **WITI Certify** protocol.
+
+---
+*Developed by @sanadidari - Senior Full-Stack Engineer | Founder of Sanadidari SARL*
