@@ -22,6 +22,19 @@ Designed for high accountability, **WITI Field** digitizes the traditionally man
 - **Backend Architecture**: Leveraging **Supabase Real-time** with advanced **Roll-Level Security (RLS)** for multi-tenant institutional privacy.
 - **Data Integrity**: Local caching strategies with background synchronization to ensure no data loss in low-connectivity field areas.
 
+### 🏗️ Architectural Overview
+```mermaid
+graph TD
+    A[UI Layer - Flutter] --> B[Domain Layer - Business Logic]
+    B --> C[Data Layer - Repository Pattern]
+    C --> D[(Local DB - SQLite)]
+    C --> E[Remote - Supabase RLS]
+    subgraph "Modular Feature Architecture"
+    B
+    C
+    end
+```
+
 ---
 
 ## 🚀 Part of the WITI Ecosystem
