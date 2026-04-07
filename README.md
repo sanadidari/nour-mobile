@@ -43,6 +43,32 @@ graph TD
 
 ---
 
+## 📱 App Screenshots
+
+> Live field deployment — Regional Council of Bailiffs, Court of Appeal of Tetouan, Morocco.
+
+### Dashboard & Navigation
+| Dark Mode | Light Mode | News & Activity |
+|-----------|------------|-----------------|
+| ![Dashboard Dark](doc/screenshots/nour1.jpeg) | ![Dashboard Light](doc/screenshots/nour2.jpeg) | ![News Home](doc/screenshots/news_home.jpeg) |
+
+### Mission Workflow
+| Intervention Form | Subject & Reference | GPS Proof |
+|-------------------|---------------------|-----------|
+| ![Form 1](doc/screenshots/nour6.jpeg) | ![Form 2](doc/screenshots/nour7.jpeg) | ![GPS Proof](doc/screenshots/nour8.jpeg) |
+
+### Institutional Data
+| Bailiff Directory | Regional Council | Legal Library |
+|-------------------|------------------|---------------|
+| ![Directory](doc/screenshots/nour4.jpeg) | ![Council](doc/screenshots/nour5.jpeg) | ![Library](doc/screenshots/nour3.jpeg) |
+
+### Profile & Settings
+| Dark Mode | Light Mode |
+|-----------|------------|
+| ![Settings Dark](doc/screenshots/dark_mode_settings.jpeg) | ![Settings Light](doc/screenshots/light_mode_settings.jpeg) |
+
+---
+
 ## 🚀 Getting Started (Developers)
 
 ### Prerequisites
