@@ -81,22 +81,35 @@ class MetadataRow extends StatelessWidget {
       children: [
         Icon(icon, size: 14, color: color),
         const SizedBox(width: 8),
-        Text('$label: ', style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
+        Text(
+          '$label: ',
+          style: TextStyle(fontSize: 12, color: context.appColors.textMuted),
+        ),
         const SizedBox(width: 4),
         Expanded(
           child: Text(
             value,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: color),
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
             textDirection: TextDirection.ltr,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (value.isNotEmpty && value != '---' && !value.contains('غير متوفر')) ...[
+        if (value.isNotEmpty &&
+            value != '---' &&
+            !value.contains('غير متوفر')) ...[
           const SizedBox(width: 8),
           GestureDetector(
             onTap: () => copyToClipboard(context, value, label),
-            child: Icon(LucideIcons.copy, size: 14, color: context.appColors.textMuted),
+            child: Icon(
+              LucideIcons.copy,
+              size: 14,
+              color: context.appColors.textMuted,
+            ),
           ),
         ],
       ],
@@ -123,7 +136,8 @@ class SyncStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (pendingCount == 0 && !isSyncing && lastError == null) return const SizedBox.shrink();
+    if (pendingCount == 0 && !isSyncing && lastError == null)
+      return const SizedBox.shrink();
 
     final bool hasError = lastError != null;
 
@@ -133,13 +147,17 @@ class SyncStatusWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: hasError
-          ? context.appColors.error.withOpacity(0.08)
-          : (isSyncing ? context.appColors.info.withOpacity(0.1) : context.appColors.warning.withOpacity(0.1)),
+            ? context.appColors.error.withOpacity(0.08)
+            : (isSyncing
+                  ? context.appColors.info.withOpacity(0.1)
+                  : context.appColors.warning.withOpacity(0.1)),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: hasError
-            ? context.appColors.error.withOpacity(0.3)
-            : (isSyncing ? context.appColors.info.withOpacity(0.3) : context.appColors.warning.withOpacity(0.3)),
+              ? context.appColors.error.withOpacity(0.3)
+              : (isSyncing
+                    ? context.appColors.info.withOpacity(0.3)
+                    : context.appColors.warning.withOpacity(0.3)),
         ),
       ),
       child: Row(
@@ -148,12 +166,17 @@ class SyncStatusWidget extends StatelessWidget {
             const SizedBox(
               width: 20,
               height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(Colors.blue)),
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation(Colors.blue),
+              ),
             )
           else
             Icon(
               hasError ? LucideIcons.alertCircle : LucideIcons.cloudOff,
-              color: hasError ? context.appColors.error : context.appColors.warning,
+              color: hasError
+                  ? context.appColors.error
+                  : context.appColors.warning,
               size: 20,
             ),
           const SizedBox(width: 12),
@@ -163,28 +186,41 @@ class SyncStatusWidget extends StatelessWidget {
               children: [
                 Text(
                   isSyncing
-                    ? 'جاري إرسال البيانات...'
-                    : (hasError ? 'عذراً، حدث خطأ في الإرسال' : 'بانتظار الإرسال'),
+                      ? 'جاري إرسال البيانات...'
+                      : (hasError
+                            ? 'عذراً، حدث خطأ في الإرسال'
+                            : 'بانتظار الإرسال'),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
-                    color: hasError ? context.appColors.error : (isSyncing ? context.appColors.info : context.appColors.warning),
+                    color: hasError
+                        ? context.appColors.error
+                        : (isSyncing
+                              ? context.appColors.info
+                              : context.appColors.warning),
                   ),
                 ),
                 Text(
                   isSyncing
-                    ? 'جاري رفع الملف: ${currentDossier ?? "..."}'
-                    : (hasError
-                        ? 'فشل الإرسال. تأكد من الإنترنت وحاول مرة أخرى'
-                        : 'يوجد $pendingCount مهمة في انتظار توفر الإنترنت'),
-                  style: TextStyle(fontSize: 12, color: context.appColors.textSecondary),
+                      ? 'جاري رفع الملف: ${currentDossier ?? "..."}'
+                      : (hasError
+                            ? 'فشل الإرسال. تأكد من الإنترنت وحاول مرة أخرى'
+                            : 'يوجد $pendingCount مهمة في انتظار توفر الإنترنت'),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.appColors.textSecondary,
+                  ),
                 ),
                 if (hasError)
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
                       'التفاصيل: $lastError',
-                      style: TextStyle(fontSize: 10, color: context.appColors.error.withOpacity(0.7), fontStyle: FontStyle.italic),
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: context.appColors.error.withOpacity(0.7),
+                        fontStyle: FontStyle.italic,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -196,8 +232,13 @@ class SyncStatusWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: onRetry,
               style: ElevatedButton.styleFrom(
-                backgroundColor: hasError ? context.appColors.error : context.appColors.warning,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                backgroundColor: hasError
+                    ? context.appColors.error
+                    : context.appColors.warning,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 0,
+                ),
                 minimumSize: const Size(60, 32),
               ),
               child: Text(

@@ -25,7 +25,9 @@ class DossierCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateStr = capturedAt != null ? DateFormat('MM/dd HH:mm').format(capturedAt!) : '---';
+    final dateStr = capturedAt != null
+        ? DateFormat('MM/dd HH:mm').format(capturedAt!)
+        : '---';
 
     return GestureDetector(
       onTap: onTap,
@@ -44,7 +46,11 @@ class DossierCard extends StatelessWidget {
                 color: context.appColors.accentGold.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(getIconForType(interventionType), color: context.appColors.accentGold, size: 20),
+              child: Icon(
+                getIconForType(interventionType),
+                color: context.appColors.accentGold,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -53,25 +59,40 @@ class DossierCard extends StatelessWidget {
                 children: [
                   Text(
                     interventionType.isNotEmpty ? interventionType : 'عملية',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: context.appColors.textPrimary),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: context.appColors.textPrimary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Row(
                     children: [
-                      Text('ملف: $dossierId',
-                          style: TextStyle(fontSize: 12, color: context.appColors.accentGold)),
+                      Text(
+                        'ملف: $dossierId',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: context.appColors.accentGold,
+                        ),
+                      ),
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 1,
+                        ),
                         decoration: BoxDecoration(
                           color: context.appColors.info.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           '$photoCount 📷',
-                          style: TextStyle(fontSize: 11, color: context.appColors.info),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: context.appColors.info,
+                          ),
                         ),
                       ),
                     ],
@@ -82,20 +103,39 @@ class DossierCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(dateStr, style: TextStyle(fontSize: 11, color: context.appColors.textMuted)),
+                Text(
+                  dateStr,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: context.appColors.textMuted,
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: context.appColors.success.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text('✓ مرسل', style: TextStyle(fontSize: 10, color: context.appColors.success)),
+                  child: Text(
+                    '✓ مرسل',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: context.appColors.success,
+                    ),
+                  ),
                 ),
               ],
             ),
             const SizedBox(width: 6),
-            Icon(LucideIcons.chevronLeft, size: 16, color: context.appColors.textMuted),
+            Icon(
+              LucideIcons.chevronLeft,
+              size: 16,
+              color: context.appColors.textMuted,
+            ),
           ],
         ),
       ),

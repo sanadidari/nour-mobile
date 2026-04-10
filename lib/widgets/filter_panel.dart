@@ -52,25 +52,67 @@ class FilterPanel extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: _buildFilterInput(context, dossierFilter, 'رقم الملف', LucideIcons.hash)),
+              Expanded(
+                child: _buildFilterInput(
+                  context,
+                  dossierFilter,
+                  'رقم الملف',
+                  LucideIcons.hash,
+                ),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _buildFilterInput(context, typeFilter, 'نوع الإجراء', LucideIcons.fileText)),
+              Expanded(
+                child: _buildFilterInput(
+                  context,
+                  typeFilter,
+                  'نوع الإجراء',
+                  LucideIcons.fileText,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildFilterInput(context, demandeurFilter, 'المدعي', LucideIcons.user)),
+              Expanded(
+                child: _buildFilterInput(
+                  context,
+                  demandeurFilter,
+                  'المدعي',
+                  LucideIcons.user,
+                ),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _buildFilterInput(context, demandeFilter, 'المدعى عليه', LucideIcons.userX)),
+              Expanded(
+                child: _buildFilterInput(
+                  context,
+                  demandeFilter,
+                  'المدعى عليه',
+                  LucideIcons.userX,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildFilterInput(context, regionFilter, 'المدينة', LucideIcons.mapPin)),
+              Expanded(
+                child: _buildFilterInput(
+                  context,
+                  regionFilter,
+                  'المدينة',
+                  LucideIcons.mapPin,
+                ),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: _buildFilterInput(context, cityFilter, 'المنطقة / الحي', LucideIcons.map)),
+              Expanded(
+                child: _buildFilterInput(
+                  context,
+                  cityFilter,
+                  'المنطقة / الحي',
+                  LucideIcons.map,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -79,7 +121,11 @@ class FilterPanel extends StatelessWidget {
             icon: const Icon(LucideIcons.rotateCcw, size: 14),
             label: const Text(
               'إعادة تعيين الفلاتر',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFFD4A537)),
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFD4A537),
+              ),
             ),
           ),
         ],
@@ -87,36 +133,59 @@ class FilterPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterInput(BuildContext context, TextEditingController controller, String hint, IconData icon) {
+  Widget _buildFilterInput(
+    BuildContext context,
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+  ) {
     if (hint == 'نوع الإجراء') {
       return _buildTypeDropdown(context, controller, hint, icon);
     }
 
     if (hint == 'المدينة' && !isManualFilterCity) {
       final items = northCityData.keys.toList();
-      return _buildDropdownFilter(context, controller, hint, icon, [...items, 'أخرى (إدخال يدوي)'], (val) {
-        if (val == 'أخرى (إدخال يدوي)') {
-          onManualModeChanged(true, isManualFilterZone);
-          controller.clear();
-        } else {
-          controller.text = val ?? '';
-        }
-        onApplyFilters();
-      });
+      return _buildDropdownFilter(
+        context,
+        controller,
+        hint,
+        icon,
+        [...items, 'أخرى (إدخال يدوي)'],
+        (val) {
+          if (val == 'أخرى (إدخال يدوي)') {
+            onManualModeChanged(true, isManualFilterZone);
+            controller.clear();
+          } else {
+            controller.text = val ?? '';
+          }
+          onApplyFilters();
+        },
+      );
     }
 
-    if (hint == 'المنطقة / الحي' && !isManualFilterZone && !isManualFilterCity) {
+    if (hint == 'المنطقة / الحي' &&
+        !isManualFilterZone &&
+        !isManualFilterCity) {
       final selectedVille = regionFilter.text;
-      final items = (selectedVille.isNotEmpty) ? (northCityData[selectedVille] ?? []) : northCityData.values.expand((e) => e).toList();
-      return _buildDropdownFilter(context, controller, hint, icon, [...items, 'أخرى (إدخال يدوي)'], (val) {
-        if (val == 'أخرى (إدخال يدوي)') {
-          onManualModeChanged(isManualFilterCity, true);
-          controller.clear();
-        } else {
-          controller.text = val ?? '';
-        }
-        onApplyFilters();
-      });
+      final items = (selectedVille.isNotEmpty)
+          ? (northCityData[selectedVille] ?? [])
+          : northCityData.values.expand((e) => e).toList();
+      return _buildDropdownFilter(
+        context,
+        controller,
+        hint,
+        icon,
+        [...items, 'أخرى (إدخال يدوي)'],
+        (val) {
+          if (val == 'أخرى (إدخال يدوي)') {
+            onManualModeChanged(isManualFilterCity, true);
+            controller.clear();
+          } else {
+            controller.text = val ?? '';
+          }
+          onApplyFilters();
+        },
+      );
     }
 
     return Container(
@@ -134,28 +203,41 @@ class FilterPanel extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           prefixIcon: Icon(icon, size: 14, color: context.appColors.accentGold),
-          suffixIcon: (hint == 'المدينة' && isManualFilterCity) || (hint == 'المنطقة / الحي' && (isManualFilterZone || isManualFilterCity))
-            ? IconButton(
-                icon: const Icon(LucideIcons.rotateCcw, size: 14),
-                onPressed: () {
-                  if (hint == 'المدينة') {
-                    onManualModeChanged(false, false);
-                  } else {
-                    onManualModeChanged(isManualFilterCity, false);
-                  }
-                  controller.clear();
-                  onApplyFilters();
-                },
-              )
-            : null,
+          suffixIcon:
+              (hint == 'المدينة' && isManualFilterCity) ||
+                  (hint == 'المنطقة / الحي' &&
+                      (isManualFilterZone || isManualFilterCity))
+              ? IconButton(
+                  icon: const Icon(LucideIcons.rotateCcw, size: 14),
+                  onPressed: () {
+                    if (hint == 'المدينة') {
+                      onManualModeChanged(false, false);
+                    } else {
+                      onManualModeChanged(isManualFilterCity, false);
+                    }
+                    controller.clear();
+                    onApplyFilters();
+                  },
+                )
+              : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 0,
+            horizontal: 8,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildDropdownFilter(BuildContext context, TextEditingController controller, String hint, IconData icon, List<String> items, Function(String?) onChanged) {
+  Widget _buildDropdownFilter(
+    BuildContext context,
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+    List<String> items,
+    Function(String?) onChanged,
+  ) {
     return Container(
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -170,16 +252,34 @@ class FilterPanel extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: DropdownButton<String>(
-              value: items.contains(controller.text) ? (controller.text.isEmpty ? null : controller.text) : null,
-              hint: Text(hint, style: const TextStyle(fontSize: 10, overflow: TextOverflow.ellipsis)),
+              value: items.contains(controller.text)
+                  ? (controller.text.isEmpty ? null : controller.text)
+                  : null,
+              hint: Text(
+                hint,
+                style: const TextStyle(
+                  fontSize: 10,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               underline: const SizedBox(),
               isExpanded: true,
               items: [
-                const DropdownMenuItem<String>(value: '', child: Text('الكل', style: TextStyle(fontSize: 13, color: Colors.grey))),
+                const DropdownMenuItem<String>(
+                  value: '',
+                  child: Text(
+                    'الكل',
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+                ),
                 ...items.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value, style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis),
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontSize: 13),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   );
                 }),
               ],
@@ -191,7 +291,12 @@ class FilterPanel extends StatelessWidget {
     );
   }
 
-  Widget _buildTypeDropdown(BuildContext context, TextEditingController controller, String hint, IconData icon) {
+  Widget _buildTypeDropdown(
+    BuildContext context,
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+  ) {
     return Container(
       height: 40,
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -206,19 +311,36 @@ class FilterPanel extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: DropdownButton<String>(
-              value: (['التبيليغ', 'التنفيذ'].contains(controller.text)) ? controller.text : null,
-              hint: Text(hint, style: const TextStyle(fontSize: 10, overflow: TextOverflow.ellipsis)),
+              value: (['التبيليغ', 'التنفيذ'].contains(controller.text))
+                  ? controller.text
+                  : null,
+              hint: Text(
+                hint,
+                style: const TextStyle(
+                  fontSize: 10,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               underline: const SizedBox(),
               isExpanded: true,
               items: [
-                const DropdownMenuItem<String>(value: '', child: Text('الكل', style: TextStyle(fontSize: 13, color: Colors.grey))),
+                const DropdownMenuItem<String>(
+                  value: '',
+                  child: Text(
+                    'الكل',
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+                ),
                 ...[
                   {'val': 'التبيليغ', 'lab': 'تبليغ'},
                   {'val': 'التنفيذ', 'lab': 'تنفيذ'},
                 ].map((item) {
                   return DropdownMenuItem<String>(
                     value: item['val'],
-                    child: Text(item['lab']!, style: const TextStyle(fontSize: 13)),
+                    child: Text(
+                      item['lab']!,
+                      style: const TextStyle(fontSize: 13),
+                    ),
                   );
                 }),
               ],

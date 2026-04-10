@@ -21,8 +21,8 @@ class _HomeViewState extends State<HomeView> {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark 
-          ? const Color(0xFF0F172A) 
+      backgroundColor: isDark
+          ? const Color(0xFF0F172A)
           : const Color(0xFFFFFBEB),
       appBar: AppBar(
         toolbarHeight: 85,
@@ -34,7 +34,11 @@ class _HomeViewState extends State<HomeView> {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white24, width: 2),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2)),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
                 ],
               ),
               child: ClipOval(
@@ -54,11 +58,19 @@ class _HomeViewState extends State<HomeView> {
                 children: [
                   Text(
                     'المجلس الجهوي للمفوضين القضائيين',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, height: 1.1),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      height: 1.1,
+                    ),
                   ),
                   Text(
                     'لدى محكمة الاستئناف بتطوان',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white70),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white70,
+                    ),
                   ),
                 ],
               ),
@@ -85,7 +97,9 @@ class _HomeViewState extends State<HomeView> {
                     viewportFraction: 1.0, // Full width
                     autoPlayCurve: Curves.easeInOutCubic,
                     enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: const Duration(milliseconds: 1000),
+                    autoPlayAnimationDuration: const Duration(
+                      milliseconds: 1000,
+                    ),
                     onPageChanged: (index, reason) {
                       setState(() {
                         _current = index;
@@ -136,8 +150,8 @@ class _HomeViewState extends State<HomeView> {
               child: Text(
                 'آخر الأخبار والأنشطة',
                 style: TextStyle(
-                  fontSize: 22, 
-                  fontWeight: FontWeight.bold, 
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                   color: Color(0xFFC5942D),
                 ),
                 textAlign: TextAlign.right,
@@ -161,13 +175,16 @@ class _HomeViewState extends State<HomeView> {
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
-                          blurRadius: 20, offset: const Offset(0, 10),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
                         ),
                       ],
                     ),
                     child: InkWell(
                       onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => NewsDetailView(article: news)),
+                        MaterialPageRoute(
+                          builder: (_) => NewsDetailView(article: news),
+                        ),
                       ),
                       borderRadius: BorderRadius.circular(24),
                       child: Column(
@@ -176,7 +193,9 @@ class _HomeViewState extends State<HomeView> {
                           Hero(
                             tag: 'news_${news.id}',
                             child: ClipRRect(
-                              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(24),
+                              ),
                               child: _buildImage(news.imageUrl, height: 200),
                             ),
                           ),
@@ -188,9 +207,11 @@ class _HomeViewState extends State<HomeView> {
                                 Text(
                                   news.title,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold, 
-                                    fontSize: 19, 
-                                    color: isDark ? Colors.white : const Color(0xFF1E3A8A),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 19,
+                                    color: isDark
+                                        ? Colors.white
+                                        : const Color(0xFF1E3A8A),
                                     height: 1.3,
                                   ),
                                   textDirection: TextDirection.rtl,
@@ -201,30 +222,42 @@ class _HomeViewState extends State<HomeView> {
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontSize: 15, 
-                                    color: isDark ? Colors.grey[300] : Colors.black87, 
+                                    fontSize: 15,
+                                    color: isDark
+                                        ? Colors.grey[300]
+                                        : Colors.black87,
                                     height: 1.6,
                                   ),
                                   textDirection: TextDirection.rtl,
                                 ),
                                 const SizedBox(height: 20),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFFC5942D).withOpacity(0.1),
+                                        color: const Color(
+                                          0xFFC5942D,
+                                        ).withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Row(
                                         children: [
-                                          const Icon(LucideIcons.chevronLeft, size: 14, color: Color(0xFFC5942D)),
+                                          const Icon(
+                                            LucideIcons.chevronLeft,
+                                            size: 14,
+                                            color: Color(0xFFC5942D),
+                                          ),
                                           const SizedBox(width: 4),
                                           const Text(
                                             'إقرأ المزيد',
                                             style: TextStyle(
-                                              color: Color(0xFFC5942D), 
+                                              color: Color(0xFFC5942D),
                                               fontWeight: FontWeight.bold,
                                               fontSize: 13,
                                             ),
@@ -233,8 +266,11 @@ class _HomeViewState extends State<HomeView> {
                                       ),
                                     ),
                                     Text(
-                                      "${news.date.day}/${news.date.month}/${news.date.year}", 
-                                      style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+                                      "${news.date.day}/${news.date.month}/${news.date.year}",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey[500],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -277,7 +313,11 @@ class _HomeViewState extends State<HomeView> {
           child: Center(
             child: Opacity(
               opacity: 0.3,
-              child: Image.asset('assets/images/logo.png', width: 60, height: 60),
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 60,
+                height: 60,
+              ),
             ),
           ),
         );
@@ -285,7 +325,9 @@ class _HomeViewState extends State<HomeView> {
       errorBuilder: (context, error, stackTrace) => Container(
         height: height,
         color: Colors.grey[200],
-        child: const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
+        child: const Center(
+          child: Icon(Icons.broken_image, color: Colors.grey),
+        ),
       ),
     );
   }

@@ -61,9 +61,7 @@ class QuickLinksView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('روابط مهنية هامة'),
-      ),
+      appBar: AppBar(title: const Text('روابط مهنية هامة')),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: _links.length,
@@ -109,14 +107,20 @@ class QuickLinksView extends StatelessWidget {
                     link['title'],
                     textAlign: TextAlign.center,
                     maxLines: 2,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     link['subtitle'],
                     textAlign: TextAlign.center,
                     maxLines: 2,
-                    style: TextStyle(fontSize: 10, color: context.appColors.textMuted),
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: context.appColors.textMuted,
+                    ),
                   ),
                 ],
               ),

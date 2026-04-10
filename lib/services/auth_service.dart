@@ -14,7 +14,11 @@ class AuthService {
   }
 
   // Inscription
-  Future<void> signUp(String email, String password, {Map<String, dynamic>? data}) async {
+  Future<void> signUp(
+    String email,
+    String password, {
+    Map<String, dynamic>? data,
+  }) async {
     await _supabase.auth.signUp(email: email, password: password, data: data);
   }
 
@@ -25,7 +29,7 @@ class AuthService {
 
   // Récupérer la session actuelle
   Session? get currentSession => _supabase.auth.currentSession;
-  
+
   // Récupérer l'utilisateur actuel
   User? get currentUser => _supabase.auth.currentUser;
 }

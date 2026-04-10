@@ -31,7 +31,7 @@ class SuccessSummaryView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 40),
-              
+
               // Animated Success Icon (or static)
               Center(
                 child: Container(
@@ -41,11 +41,15 @@ class SuccessSummaryView extends StatelessWidget {
                     color: context.appColors.success.withOpacity(0.15),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(LucideIcons.checkCircle, color: context.appColors.success, size: 60),
+                  child: Icon(
+                    LucideIcons.checkCircle,
+                    color: context.appColors.success,
+                    size: 60,
+                  ),
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Success Message
               Text(
                 'تم الإرسال بنجاح',
@@ -60,11 +64,14 @@ class SuccessSummaryView extends StatelessWidget {
               Text(
                 'تم تسجيل جميع بيانات العملية ورفع الصور بسلام.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: context.appColors.textMuted),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: context.appColors.textMuted,
+                ),
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Details Card
               Container(
                 padding: const EdgeInsets.all(20),
@@ -92,15 +99,35 @@ class SuccessSummaryView extends StatelessWidget {
                       ),
                     ),
                     const Divider(height: 30),
-                    
-                    _buildDetailRow(context, LucideIcons.fileText, 'نوع التدخل', interventionType),
+
+                    _buildDetailRow(
+                      context,
+                      LucideIcons.fileText,
+                      'نوع التدخل',
+                      interventionType,
+                    ),
                     const SizedBox(height: 16),
-                    _buildDetailRow(context, LucideIcons.hash, 'رقم الملف', dossierId),
+                    _buildDetailRow(
+                      context,
+                      LucideIcons.hash,
+                      'رقم الملف',
+                      dossierId,
+                    ),
                     const SizedBox(height: 16),
-                    _buildDetailRow(context, LucideIcons.camera, 'عدد الصور الملتقطة', '$photoCount صور'),
+                    _buildDetailRow(
+                      context,
+                      LucideIcons.camera,
+                      'عدد الصور الملتقطة',
+                      '$photoCount صور',
+                    ),
                     const SizedBox(height: 16),
-                    _buildDetailRow(context, LucideIcons.clock, 'تاريخ الإرسال', dateStr),
-                    
+                    _buildDetailRow(
+                      context,
+                      LucideIcons.clock,
+                      'تاريخ الإرسال',
+                      dateStr,
+                    ),
+
                     if (formFields.isNotEmpty) ...[
                       const Divider(height: 30),
                       Text(
@@ -112,38 +139,55 @@ class SuccessSummaryView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      ...formFields.entries.where((e) => e.value.isNotEmpty).map((e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(LucideIcons.info, size: 16, color: context.appColors.accentGold),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
+                      ...formFields.entries
+                          .where((e) => e.value.isNotEmpty)
+                          .map(
+                            (e) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    e.key,
-                                    style: TextStyle(fontSize: 12, color: context.appColors.textMuted),
+                                  Icon(
+                                    LucideIcons.info,
+                                    size: 16,
+                                    color: context.appColors.accentGold,
                                   ),
-                                  Text(
-                                    e.value,
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: context.appColors.textPrimary),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          e.key,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: context.appColors.textMuted,
+                                          ),
+                                        ),
+                                        Text(
+                                          e.value,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                context.appColors.textPrimary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      )),
+                          ),
                     ],
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 50),
-              
+
               // Back Button
               ElevatedButton.icon(
                 onPressed: () {
@@ -153,7 +197,9 @@ class SuccessSummaryView extends StatelessWidget {
                   backgroundColor: context.appColors.primaryNavy,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 18),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   elevation: 2,
                 ),
                 icon: const Icon(LucideIcons.home),
@@ -180,7 +226,12 @@ class SuccessSummaryView extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, IconData icon, String label, String value) {
+  Widget _buildDetailRow(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value,
+  ) {
     return Row(
       children: [
         Container(
@@ -196,7 +247,13 @@ class SuccessSummaryView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(label, style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: context.appColors.textMuted,
+                ),
+              ),
               Text(
                 value,
                 style: TextStyle(
@@ -211,7 +268,11 @@ class SuccessSummaryView extends StatelessWidget {
         if (value.isNotEmpty && value != '---')
           GestureDetector(
             onTap: () => _copyToClipboard(context, value, label),
-            child: Icon(LucideIcons.copy, size: 16, color: context.appColors.textMuted.withOpacity(0.5)),
+            child: Icon(
+              LucideIcons.copy,
+              size: 16,
+              color: context.appColors.textMuted.withOpacity(0.5),
+            ),
           ),
       ],
     );

@@ -77,7 +77,12 @@ List<Map<String, dynamic>> applyDossierFilters({
   required String ville,
   required String zone,
 }) {
-  if (dossier.isEmpty && type.isEmpty && demandeur.isEmpty && demande.isEmpty && ville.isEmpty && zone.isEmpty) {
+  if (dossier.isEmpty &&
+      type.isEmpty &&
+      demandeur.isEmpty &&
+      demande.isEmpty &&
+      ville.isEmpty &&
+      zone.isEmpty) {
     return source;
   }
 
@@ -89,24 +94,31 @@ List<Map<String, dynamic>> applyDossierFilters({
 
     bool matches = true;
     if (dossier.isNotEmpty && !dId.contains(dossier)) matches = false;
-    if (type.isNotEmpty && !iType.contains(type) && !notes.contains(type)) matches = false;
+    if (type.isNotEmpty && !iType.contains(type) && !notes.contains(type))
+      matches = false;
     if (demandeur.isNotEmpty && !notes.contains(demandeur)) matches = false;
     if (demande.isNotEmpty && !notes.contains(demande)) matches = false;
 
-    final itemVille = (form['المدينة'] ?? form['العمالة / الإقليم'] ?? '').toString();
-    final itemZone = (form['المنطقة / الحي'] ?? form['الجماعة / المدينة'] ?? '').toString();
+    final itemVille = (form['المدينة'] ?? form['العمالة / الإقليم'] ?? '')
+        .toString();
+    final itemZone = (form['المنطقة / الحي'] ?? form['الجماعة / المدينة'] ?? '')
+        .toString();
 
     if (ville.isNotEmpty) {
       bool match = false;
       if (itemVille.isNotEmpty && itemVille.contains(ville)) match = true;
-      if (notes.contains('المدينة: $ville') || notes.contains('العمالة / الإقليم: $ville')) match = true;
+      if (notes.contains('المدينة: $ville') ||
+          notes.contains('العمالة / الإقليم: $ville'))
+        match = true;
       if (!match) matches = false;
     }
 
     if (zone.isNotEmpty) {
       bool match = false;
       if (itemZone.isNotEmpty && itemZone.contains(zone)) match = true;
-      if (notes.contains('المنطقة / الحي: $zone') || notes.contains('الجماعة / المدينة: $zone')) match = true;
+      if (notes.contains('المنطقة / الحي: $zone') ||
+          notes.contains('الجماعة / المدينة: $zone'))
+        match = true;
       if (!match) matches = false;
     }
 

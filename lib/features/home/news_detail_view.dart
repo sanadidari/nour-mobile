@@ -20,10 +20,7 @@ class NewsDetailView extends StatelessWidget {
             flexibleSpace: FlexibleSpaceBar(
               background: Hero(
                 tag: 'news_${article.id}',
-                child: Image.network(
-                  article.imageUrl,
-                  fit: BoxFit.cover,
-                ),
+                child: Image.network(article.imageUrl, fit: BoxFit.cover),
               ),
             ),
             backgroundColor: const Color(0xFFC5942D), // GOLD
@@ -35,7 +32,7 @@ class NewsDetailView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                   Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -48,7 +45,11 @@ class NewsDetailView extends StatelessWidget {
                       const CircleAvatar(
                         backgroundColor: Color(0xFF1E3A8A),
                         radius: 12,
-                        child: Icon(LucideIcons.newspaper, color: Colors.white, size: 12),
+                        child: Icon(
+                          LucideIcons.newspaper,
+                          color: Colors.white,
+                          size: 12,
+                        ),
                       ),
                     ],
                   ),

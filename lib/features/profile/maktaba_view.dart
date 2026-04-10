@@ -10,7 +10,8 @@ class MaktabaView extends StatefulWidget {
   State<MaktabaView> createState() => _MaktabaViewState();
 }
 
-class _MaktabaViewState extends State<MaktabaView> with SingleTickerProviderStateMixin {
+class _MaktabaViewState extends State<MaktabaView>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
   List<LawArticle> _filteredArticles = law8103Data;
@@ -26,11 +27,21 @@ class _MaktabaViewState extends State<MaktabaView> with SingleTickerProviderStat
   void _filter(String query) {
     setState(() {
       if (_tabController.index == 0) {
-        _filteredArticles = law8103Data.where((a) => a.title.contains(query) || a.content.contains(query)).toList();
+        _filteredArticles = law8103Data
+            .where((a) => a.title.contains(query) || a.content.contains(query))
+            .toList();
       } else if (_tabController.index == 1) {
-        _filteredDecree = decreeData.where((d) => d.content.contains(query)).toList();
+        _filteredDecree = decreeData
+            .where((d) => d.content.contains(query))
+            .toList();
       } else {
-        _filteredTerms = glossaryData.where((t) => t.termAr.contains(query) || t.termFr.toLowerCase().contains(query.toLowerCase())).toList();
+        _filteredTerms = glossaryData
+            .where(
+              (t) =>
+                  t.termAr.contains(query) ||
+                  t.termFr.toLowerCase().contains(query.toLowerCase()),
+            )
+            .toList();
       }
     });
   }
@@ -74,7 +85,11 @@ class _MaktabaViewState extends State<MaktabaView> with SingleTickerProviderStat
                     textAlign: TextAlign.right,
                     decoration: InputDecoration(
                       hintText: 'بحث سريع...',
-                      prefixIcon: Icon(LucideIcons.search, size: 16, color: context.appColors.textMuted),
+                      prefixIcon: Icon(
+                        LucideIcons.search,
+                        size: 16,
+                        color: context.appColors.textMuted,
+                      ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(vertical: 8),
                     ),
@@ -108,22 +123,41 @@ class _MaktabaViewState extends State<MaktabaView> with SingleTickerProviderStat
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color: context.appColors.accentGold.withOpacity(0.1),
+                            color: context.appColors.accentGold.withOpacity(
+                              0.1,
+                            ),
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Text('المادة ${art.id}', style: TextStyle(color: context.appColors.accentGold, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            'المادة ${art.id}',
+                            style: TextStyle(
+                              color: context.appColors.accentGold,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 12),
-                        Expanded(child: Text(art.title, style: const TextStyle(fontWeight: FontWeight.bold))),
+                        Expanded(
+                          child: Text(
+                            art.title,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ],
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
                       child: Divider(),
                     ),
-                    Text(art.content, style: const TextStyle(fontSize: 14, height: 1.6)),
+                    Text(
+                      art.content,
+                      style: const TextStyle(fontSize: 14, height: 1.6),
+                    ),
                   ],
                 ),
               );
@@ -147,12 +181,28 @@ class _MaktabaViewState extends State<MaktabaView> with SingleTickerProviderStat
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
-                      child: Text('المادة ${art.id} من المرسوم', style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        'المادة ${art.id} من المرسوم',
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
-                    Text(art.content, style: const TextStyle(fontSize: 14, height: 1.6)),
+                    Text(
+                      art.content,
+                      style: const TextStyle(fontSize: 14, height: 1.6),
+                    ),
                   ],
                 ),
               );
@@ -166,11 +216,30 @@ class _MaktabaViewState extends State<MaktabaView> with SingleTickerProviderStat
               final term = _filteredTerms[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: ListTile(
-                  title: Text(term.termAr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  subtitle: Text(term.termFr, style: TextStyle(color: context.appColors.textMuted, fontSize: 13, fontStyle: FontStyle.italic)),
-                  trailing: Icon(LucideIcons.bookOpen, size: 18, color: context.appColors.accentGold),
+                  title: Text(
+                    term.termAr,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  subtitle: Text(
+                    term.termFr,
+                    style: TextStyle(
+                      color: context.appColors.textMuted,
+                      fontSize: 13,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  trailing: Icon(
+                    LucideIcons.bookOpen,
+                    size: 18,
+                    color: context.appColors.accentGold,
+                  ),
                 ),
               );
             },

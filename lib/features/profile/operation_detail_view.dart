@@ -42,7 +42,9 @@ class _OperationDetailViewState extends State<OperationDetailView> {
       final path = item['image_path'] as String?;
       if (path != null && path.isNotEmpty) {
         try {
-          final url = await _supabase.storage.from('evidence').createSignedUrl(path, 3600);
+          final url = await _supabase.storage
+              .from('evidence')
+              .createSignedUrl(path, 3600);
           _imageUrls[path] = url;
         } catch (_) {}
       }
@@ -53,28 +55,42 @@ class _OperationDetailViewState extends State<OperationDetailView> {
   Future<void> _shareNetworkImage(String? imagePath, String title) async {
     if (imagePath == null) return;
     try {
-      final bytes = await _supabase.storage.from('evidence').download(imagePath);
+      final bytes = await _supabase.storage
+          .from('evidence')
+          .download(imagePath);
       final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/share_${DateTime.now().millisecondsSinceEpoch}.png');
+      final file = File(
+        '${tempDir.path}/share_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
       await file.writeAsBytes(bytes);
       await Share.shareXFiles([XFile(file.path)], text: title);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('خطأ في المشاركة: $e')));
+      if (mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('خطأ في المشاركة: $e')));
     }
   }
 
   void _openImageViewer(String? url, int index) {
     if (url == null || url.isEmpty) return;
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => _FullScreenImageView(imageUrl: url, title: 'صورة ${index + 1}')),
+      MaterialPageRoute(
+        builder: (context) =>
+            _FullScreenImageView(imageUrl: url, title: 'صورة ${index + 1}'),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final firstItem = widget.items.first;
-    final capturedAt = DateTime.tryParse(firstItem['captured_at'] ?? '')?.toLocal();
-    final dateStr = capturedAt != null ? DateFormat('yyyy/MM/dd - HH:mm').format(capturedAt) : '---';
+    final capturedAt = DateTime.tryParse(
+      firstItem['captured_at'] ?? '',
+    )?.toLocal();
+    final dateStr = capturedAt != null
+        ? DateFormat('yyyy/MM/dd - HH:mm').format(capturedAt)
+        : '---';
 
     return Scaffold(
       appBar: AppBar(title: const Text('تفاصيل العملية')),
@@ -86,13 +102,18 @@ class _OperationDetailViewState extends State<OperationDetailView> {
             // Header Card
             Card(
               elevation: 3,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   gradient: LinearGradient(
-                    colors: [context.appColors.primaryNavy, context.appColors.primaryNavy.withOpacity(0.85)],
+                    colors: [
+                      context.appColors.primaryNavy,
+                      context.appColors.primaryNavy.withOpacity(0.85),
+                    ],
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
                   ),
@@ -104,34 +125,68 @@ class _OperationDetailViewState extends State<OperationDetailView> {
                       children: [
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(12)),
-                          child: Icon(getIconForType(widget.interventionType), color: Colors.white, size: 24),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            getIconForType(widget.interventionType),
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            widget.interventionType.isNotEmpty ? widget.interventionType : 'عملية',
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                            widget.interventionType.isNotEmpty
+                                ? widget.interventionType
+                                : 'عملية',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _buildHeaderInfo(LucideIcons.hash, 'رقم الملف', widget.dossierId),
+                    _buildHeaderInfo(
+                      LucideIcons.hash,
+                      'رقم الملف',
+                      widget.dossierId,
+                    ),
                     const SizedBox(height: 8),
                     _buildHeaderInfo(LucideIcons.clock, 'التاريخ', dateStr),
                     const SizedBox(height: 8),
-                    _buildHeaderInfo(LucideIcons.camera, 'عدد الصور', '${widget.items.length}'),
+                    _buildHeaderInfo(
+                      LucideIcons.camera,
+                      'عدد الصور',
+                      '${widget.items.length}',
+                    ),
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(color: Colors.green.withOpacity(0.2), borderRadius: BorderRadius.circular(20)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(LucideIcons.checkCircle, size: 14, color: Colors.white),
+                          Icon(
+                            LucideIcons.checkCircle,
+                            size: 14,
+                            color: Colors.white,
+                          ),
                           SizedBox(width: 4),
-                          Text('تم الإرسال بنجاح', style: TextStyle(color: Colors.white, fontSize: 12)),
+                          Text(
+                            'تم الإرسال بنجاح',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
                         ],
                       ),
                     ),
@@ -147,7 +202,14 @@ class _OperationDetailViewState extends State<OperationDetailView> {
               SectionCard(
                 icon: LucideIcons.fileText,
                 title: 'الملاحظات',
-                child: Text(firstItem['notes'] ?? '', style: TextStyle(fontSize: 14, height: 1.5, color: context.appColors.textPrimary)),
+                child: Text(
+                  firstItem['notes'] ?? '',
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.5,
+                    color: context.appColors.textPrimary,
+                  ),
+                ),
               ),
 
             if (_hasNotes()) const SizedBox(height: 16),
@@ -157,24 +219,42 @@ class _OperationDetailViewState extends State<OperationDetailView> {
               icon: LucideIcons.image,
               title: 'الصور (${widget.items.length})',
               child: _loadingUrls
-                  ? const Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator(strokeWidth: 2)))
+                  ? const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Center(
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
                   : Column(
                       children: widget.items.asMap().entries.map((entry) {
                         final index = entry.key;
                         final item = entry.value;
                         final imagePath = item['image_path'] as String?;
-                        final imageUrl = imagePath != null ? _imageUrls[imagePath] : null;
-                        final capturedAt = DateTime.tryParse(item['captured_at'] ?? '')?.toLocal();
-                        final dateStr = capturedAt != null ? DateFormat('yyyy/MM/dd - HH:mm:ss').format(capturedAt) : '---';
+                        final imageUrl = imagePath != null
+                            ? _imageUrls[imagePath]
+                            : null;
+                        final capturedAt = DateTime.tryParse(
+                          item['captured_at'] ?? '',
+                        )?.toLocal();
+                        final dateStr = capturedAt != null
+                            ? DateFormat(
+                                'yyyy/MM/dd - HH:mm:ss',
+                              ).format(capturedAt)
+                            : '---';
                         final lat = item['latitude'];
                         final lon = item['longitude'];
-                        final hasGps = lat != null && lon != null && (lat != 0 || lon != 0);
+                        final hasGps =
+                            lat != null &&
+                            lon != null &&
+                            (lat != 0 || lon != 0);
                         final gpsStr = hasGps
                             ? '${(lat as num).toStringAsFixed(6)}, ${(lon as num).toStringAsFixed(6)}'
                             : extractGpsFromNotes(item['notes'] ?? '');
 
                         return Container(
-                          margin: EdgeInsets.only(bottom: index < widget.items.length - 1 ? 16 : 0),
+                          margin: EdgeInsets.only(
+                            bottom: index < widget.items.length - 1 ? 16 : 0,
+                          ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: context.appColors.border),
@@ -185,7 +265,9 @@ class _OperationDetailViewState extends State<OperationDetailView> {
                               GestureDetector(
                                 onTap: () => _openImageViewer(imageUrl, index),
                                 child: ClipRRect(
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(12),
+                                  ),
                                   child: imageUrl != null
                                       ? Stack(
                                           children: [
@@ -195,39 +277,77 @@ class _OperationDetailViewState extends State<OperationDetailView> {
                                               height: 220,
                                               fit: BoxFit.cover,
                                               loadingBuilder: (context, child, progress) {
-                                                if (progress == null) return child;
+                                                if (progress == null)
+                                                  return child;
                                                 return Container(
                                                   height: 220,
-                                                  color: context.appColors.bgSurface,
+                                                  color: context
+                                                      .appColors
+                                                      .bgSurface,
                                                   child: Center(
                                                     child: CircularProgressIndicator(
-                                                      value: progress.expectedTotalBytes != null
-                                                          ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes!
+                                                      value:
+                                                          progress.expectedTotalBytes !=
+                                                              null
+                                                          ? progress.cumulativeBytesLoaded /
+                                                                progress
+                                                                    .expectedTotalBytes!
                                                           : null,
                                                       strokeWidth: 2,
                                                     ),
                                                   ),
                                                 );
                                               },
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return Container(
-                                                  height: 220,
-                                                  color: context.appColors.bgSurface,
-                                                  child: Center(child: Icon(LucideIcons.imageOff, size: 48, color: context.appColors.textMuted)),
-                                                );
-                                              },
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Container(
+                                                      height: 220,
+                                                      color: context
+                                                          .appColors
+                                                          .bgSurface,
+                                                      child: Center(
+                                                        child: Icon(
+                                                          LucideIcons.imageOff,
+                                                          size: 48,
+                                                          color: context
+                                                              .appColors
+                                                              .textMuted,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
                                             ),
                                             Positioned(
-                                              bottom: 8, left: 8,
+                                              bottom: 8,
+                                              left: 8,
                                               child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                                decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(20)),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 4,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black54,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
                                                 child: const Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
-                                                    Icon(LucideIcons.zoomIn, size: 14, color: Colors.white),
+                                                    Icon(
+                                                      LucideIcons.zoomIn,
+                                                      size: 14,
+                                                      color: Colors.white,
+                                                    ),
                                                     SizedBox(width: 4),
-                                                    Text('اضغط للتكبير', style: TextStyle(color: Colors.white, fontSize: 11)),
+                                                    Text(
+                                                      'اضغط للتكبير',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 11,
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -239,11 +359,25 @@ class _OperationDetailViewState extends State<OperationDetailView> {
                                           color: context.appColors.bgSurface,
                                           child: Center(
                                             child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
-                                                Icon(LucideIcons.imageOff, size: 48, color: context.appColors.textMuted),
+                                                Icon(
+                                                  LucideIcons.imageOff,
+                                                  size: 48,
+                                                  color: context
+                                                      .appColors
+                                                      .textMuted,
+                                                ),
                                                 const SizedBox(height: 8),
-                                                Text('لا يمكن تحميل الصورة', style: TextStyle(color: context.appColors.textMuted)),
+                                                Text(
+                                                  'لا يمكن تحميل الصورة',
+                                                  style: TextStyle(
+                                                    color: context
+                                                        .appColors
+                                                        .textMuted,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -257,31 +391,75 @@ class _OperationDetailViewState extends State<OperationDetailView> {
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                          decoration: BoxDecoration(color: context.appColors.primaryNavy, borderRadius: BorderRadius.circular(20)),
-                                          child: Text('صورة ${index + 1}', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                context.appColors.primaryNavy,
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            'صورة ${index + 1}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                         const Spacer(),
                                         IconButton(
-                                          icon: const Icon(LucideIcons.share2, size: 18, color: Colors.blue),
-                                          onPressed: () => _shareNetworkImage(imagePath, 'صورة من ملف ${widget.dossierId} - ${widget.interventionType}'),
-                                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                                          icon: const Icon(
+                                            LucideIcons.share2,
+                                            size: 18,
+                                            color: Colors.blue,
+                                          ),
+                                          onPressed: () => _shareNetworkImage(
+                                            imagePath,
+                                            'صورة من ملف ${widget.dossierId} - ${widget.interventionType}',
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                          ),
                                           constraints: const BoxConstraints(),
                                         ),
                                         const SizedBox(width: 8),
-                                        Icon(LucideIcons.checkCircle, size: 14, color: context.appColors.success),
+                                        Icon(
+                                          LucideIcons.checkCircle,
+                                          size: 14,
+                                          color: context.appColors.success,
+                                        ),
                                         const SizedBox(width: 4),
-                                        Text('مُرسلة', style: TextStyle(fontSize: 12, color: context.appColors.success)),
+                                        Text(
+                                          'مُرسلة',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: context.appColors.success,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                     const SizedBox(height: 10),
-                                    MetadataRow(icon: LucideIcons.clock, label: 'التوقيت', value: dateStr, color: Colors.blue),
+                                    MetadataRow(
+                                      icon: LucideIcons.clock,
+                                      label: 'التوقيت',
+                                      value: dateStr,
+                                      color: Colors.blue,
+                                    ),
                                     const SizedBox(height: 6),
                                     MetadataRow(
                                       icon: LucideIcons.mapPin,
                                       label: 'الإحداثيات',
-                                      value: gpsStr.isNotEmpty ? gpsStr : 'GPS غير متوفر',
-                                      color: gpsStr.isNotEmpty ? Colors.green : Colors.orange,
+                                      value: gpsStr.isNotEmpty
+                                          ? gpsStr
+                                          : 'GPS غير متوفر',
+                                      color: gpsStr.isNotEmpty
+                                          ? Colors.green
+                                          : Colors.orange,
                                     ),
                                   ],
                                 ),
@@ -308,16 +486,35 @@ class _OperationDetailViewState extends State<OperationDetailView> {
       children: [
         Icon(icon, size: 16, color: Colors.white70),
         const SizedBox(width: 8),
-        Text('$label: ', style: const TextStyle(fontSize: 13, color: Colors.white70)),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white))),
+        Text(
+          '$label: ',
+          style: const TextStyle(fontSize: 13, color: Colors.white70),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
         if (value.isNotEmpty && value != '---') ...[
           const SizedBox(width: 8),
           GestureDetector(
             onTap: () => copyToClipboard(context, value, label),
             child: Container(
               padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
-              child: const Icon(LucideIcons.copy, size: 12, color: Colors.white70),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Icon(
+                LucideIcons.copy,
+                size: 12,
+                color: Colors.white70,
+              ),
             ),
           ),
         ],
@@ -337,7 +534,12 @@ class _FullScreenImageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(backgroundColor: Colors.black, foregroundColor: Colors.white, title: Text(title), elevation: 0),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        title: Text(title),
+        elevation: 0,
+      ),
       body: Center(
         child: InteractiveViewer(
           panEnabled: true,
@@ -350,7 +552,10 @@ class _FullScreenImageView extends StatelessWidget {
               if (progress == null) return child;
               return Center(
                 child: CircularProgressIndicator(
-                  value: progress.expectedTotalBytes != null ? progress.cumulativeBytesLoaded / progress.expectedTotalBytes! : null,
+                  value: progress.expectedTotalBytes != null
+                      ? progress.cumulativeBytesLoaded /
+                            progress.expectedTotalBytes!
+                      : null,
                   color: Colors.white,
                 ),
               );
@@ -362,7 +567,10 @@ class _FullScreenImageView extends StatelessWidget {
                   children: [
                     Icon(LucideIcons.imageOff, size: 64, color: Colors.white54),
                     SizedBox(height: 16),
-                    Text('لا يمكن تحميل الصورة', style: TextStyle(color: Colors.white54, fontSize: 16)),
+                    Text(
+                      'لا يمكن تحميل الصورة',
+                      style: TextStyle(color: Colors.white54, fontSize: 16),
+                    ),
                   ],
                 ),
               );

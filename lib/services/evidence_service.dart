@@ -18,7 +18,11 @@ class LocalEvidence {
   final Position position;
   final DateTime timestamp;
 
-  LocalEvidence({required this.localPath, required this.position, required this.timestamp});
+  LocalEvidence({
+    required this.localPath,
+    required this.position,
+    required this.timestamp,
+  });
 
   Map<String, dynamic> toJson() => {
     'localPath': localPath,
@@ -32,8 +36,14 @@ class LocalEvidence {
     position: Position(
       latitude: (json['lat'] as num).toDouble(),
       longitude: (json['lon'] as num).toDouble(),
-      timestamp: DateTime.now(), accuracy: 0, altitude: 0, heading: 0, speed: 0, speedAccuracy: 0,
-      altitudeAccuracy: 0, headingAccuracy: 0,
+      timestamp: DateTime.now(),
+      accuracy: 0,
+      altitude: 0,
+      heading: 0,
+      speed: 0,
+      speedAccuracy: 0,
+      altitudeAccuracy: 0,
+      headingAccuracy: 0,
     ),
     timestamp: DateTime.parse(json['time']).toLocal(),
   );
@@ -71,9 +81,15 @@ class PendingMission {
     id: json['id'] ?? const Uuid().v4(),
     dossierId: json['dossierId'],
     interventionType: json['interventionType'],
-    evidences: (json['evidences'] as List).map((e) => LocalEvidence.fromJson(e)).toList(),
-    formFields: json['formFields'] != null ? Map<String, String>.from(json['formFields']) : null,
-    createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toUtc().toIso8601String()).toLocal(),
+    evidences: (json['evidences'] as List)
+        .map((e) => LocalEvidence.fromJson(e))
+        .toList(),
+    formFields: json['formFields'] != null
+        ? Map<String, String>.from(json['formFields'])
+        : null,
+    createdAt: DateTime.parse(
+      json['createdAt'] ?? DateTime.now().toUtc().toIso8601String(),
+    ).toLocal(),
   );
 }
 
@@ -92,7 +108,8 @@ class EvidenceService {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) return _fallbackPosition();
       }
-      if (permission == LocationPermission.deniedForever) return _fallbackPosition();
+      if (permission == LocationPermission.deniedForever)
+        return _fallbackPosition();
 
       return await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
@@ -112,10 +129,16 @@ class EvidenceService {
 
   Position _fallbackPosition() {
     return Position(
-      latitude: 0, longitude: 0,
-      timestamp: DateTime.now(), accuracy: 0, altitude: 0,
-      heading: 0, speed: 0, speedAccuracy: 0,
-      altitudeAccuracy: 0, headingAccuracy: 0,
+      latitude: 0,
+      longitude: 0,
+      timestamp: DateTime.now(),
+      accuracy: 0,
+      altitude: 0,
+      heading: 0,
+      speed: 0,
+      speedAccuracy: 0,
+      altitudeAccuracy: 0,
+      headingAccuracy: 0,
     );
   }
 
@@ -140,7 +163,8 @@ class EvidenceService {
     if (!await evidenceDir.exists()) {
       await evidenceDir.create(recursive: true);
     }
-    final savedPath = '${evidenceDir.path}/ev_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final savedPath =
+        '${evidenceDir.path}/ev_${DateTime.now().millisecondsSinceEpoch}.jpg';
     await File(photo.path).copy(savedPath);
 
     await _clearPreCaptureState();
@@ -160,9 +184,11 @@ class EvidenceService {
       final pos = await _loadPreCaptureState();
       final appDir = await getApplicationDocumentsDirectory();
       final evidenceDir = Directory('${appDir.path}/evidence_photos');
-      if (!await evidenceDir.exists()) await evidenceDir.create(recursive: true);
-      
-      final savedPath = '${evidenceDir.path}/ev_recovered_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      if (!await evidenceDir.exists())
+        await evidenceDir.create(recursive: true);
+
+      final savedPath =
+          '${evidenceDir.path}/ev_recovered_${DateTime.now().millisecondsSinceEpoch}.jpg';
       await File(response.file!.path).copy(savedPath);
       await _clearPreCaptureState();
 
@@ -180,11 +206,13 @@ class EvidenceService {
     try {
       final tempDir = await getTemporaryDirectory();
       final file = File('${tempDir.path}/pre_capture_gps.json');
-      await file.writeAsString(jsonEncode({
-        'lat': pos.latitude,
-        'lon': pos.longitude,
-        'time': DateTime.now().toIso8601String(),
-      }));
+      await file.writeAsString(
+        jsonEncode({
+          'lat': pos.latitude,
+          'lon': pos.longitude,
+          'time': DateTime.now().toIso8601String(),
+        }),
+      );
     } catch (_) {}
   }
 
@@ -197,9 +225,14 @@ class EvidenceService {
         return Position(
           latitude: (data['lat'] as num).toDouble(),
           longitude: (data['lon'] as num).toDouble(),
-          timestamp: DateTime.now(), accuracy: 0, altitude: 0,
-          heading: 0, speed: 0, speedAccuracy: 0,
-          altitudeAccuracy: 0, headingAccuracy: 0,
+          timestamp: DateTime.now(),
+          accuracy: 0,
+          altitude: 0,
+          heading: 0,
+          speed: 0,
+          speedAccuracy: 0,
+          altitudeAccuracy: 0,
+          headingAccuracy: 0,
         );
       }
     } catch (_) {}
@@ -241,7 +274,7 @@ class EvidenceService {
     final appDir = await getApplicationDocumentsDirectory();
     final queueDir = Directory('${appDir.path}/upload_queue');
     if (!await queueDir.exists()) await queueDir.create(recursive: true);
-    
+
     final file = File('${queueDir.path}/${mission.id}.json');
     await file.writeAsString(jsonEncode(mission.toJson()));
   }
@@ -272,23 +305,31 @@ class EvidenceService {
     }
   }
 
-  /// Nettoie les anciens fichiers photos locaux qui datent de plus de 7 jours 
+  /// Nettoie les anciens fichiers photos locaux qui datent de plus de 7 jours
   Future<int> cleanupOldLocalPhotos({int daysOlderThan = 7}) async {
     int deletedCount = 0;
     try {
       final appDir = await getApplicationDocumentsDirectory();
       final evidenceDir = Directory('${appDir.path}/evidence_photos');
       if (await evidenceDir.exists()) {
-        final threshold = DateTime.now().subtract(Duration(days: daysOlderThan));
+        final threshold = DateTime.now().subtract(
+          Duration(days: daysOlderThan),
+        );
         final files = evidenceDir.listSync().whereType<File>().toList();
         for (var file in files) {
           final stat = await file.stat();
           if (stat.modified.isBefore(threshold)) {
-            try { await file.delete(); deletedCount++; } catch (_) {}
+            try {
+              await file.delete();
+              deletedCount++;
+            } catch (_) {}
           }
         }
       }
-      if (deletedCount > 0) dev.log('Nettoyage local: $deletedCount fichiers supprimés (> $daysOlderThan jours)');
+      if (deletedCount > 0)
+        dev.log(
+          'Nettoyage local: $deletedCount fichiers supprimés (> $daysOlderThan jours)',
+        );
     } catch (e) {
       dev.log('Erreur nettoyage local: $e');
     }
@@ -324,17 +365,23 @@ class EvidenceService {
           timestamp: ev.timestamp,
         );
       } catch (e, stack) {
-        dev.log("Erreur processImage pour ${ev.localPath}: $e", stackTrace: stack);
+        dev.log(
+          "Erreur processImage pour ${ev.localPath}: $e",
+          stackTrace: stack,
+        );
         rethrow;
       }
 
       final String fileExt = processedFile.path.split('.').last;
-      final String fileName = '$userId/EVD_${DateTime.now().millisecondsSinceEpoch}_${const Uuid().v4()}.$fileExt';
+      final String fileName =
+          '$userId/EVD_${DateTime.now().millisecondsSinceEpoch}_${const Uuid().v4()}.$fileExt';
 
       bool storageSuccess = false;
       try {
         // 2. Upload photo
-        await _supabase.storage.from('evidence').upload(fileName, processedFile);
+        await _supabase.storage
+            .from('evidence')
+            .upload(fileName, processedFile);
         storageSuccess = true;
 
         // 3. Insert metadata
@@ -346,17 +393,19 @@ class EvidenceService {
           'intervention_type': mission.interventionType,
           'latitude': ev.position.latitude,
           'longitude': ev.position.longitude,
-          'notes': mission.formFields != null 
-            ? mission.formFields!.entries.map((e) => '${e.key}: ${e.value}').join(' | ') 
-            : '',
+          'notes': mission.formFields != null
+              ? mission.formFields!.entries
+                    .map((e) => '${e.key}: ${e.value}')
+                    .join(' | ')
+              : '',
         });
 
         // 4. Nettoyage physique du fichier local original si tout réussi
         try {
-          if (await File(ev.localPath).exists()) await File(ev.localPath).delete();
+          if (await File(ev.localPath).exists())
+            await File(ev.localPath).delete();
           if (await processedFile.exists()) await processedFile.delete();
         } catch (_) {}
-
       } catch (e, stack) {
         dev.log("Erreur lors de l'upload/insert: $e", stackTrace: stack);
         // Si l'insert a échoué mais le storage a réussi, on essaie de nettoyer le storage pour éviter les orphelins
@@ -371,12 +420,15 @@ class EvidenceService {
         rethrow;
       }
     }
-    
+
     // Mission finie, retirer du JSON
     await removeMissionFromQueue(mission.id);
   }
 
-  Future<List<Map<String, dynamic>>> getHistory({int limit = 100, int offset = 0}) async {
+  Future<List<Map<String, dynamic>>> getHistory({
+    int limit = 100,
+    int offset = 0,
+  }) async {
     final userId = _supabase.auth.currentUser?.id;
     if (userId == null) return [];
     try {
@@ -396,7 +448,10 @@ class EvidenceService {
     final userId = _supabase.auth.currentUser?.id;
     if (userId == null) return {'total': 0, 'today': 0, 'photos': 0};
     try {
-      final all = await _supabase.from('evidence').select('id, captured_at, dossier_id').eq('user_id', userId);
+      final all = await _supabase
+          .from('evidence')
+          .select('id, captured_at, dossier_id')
+          .eq('user_id', userId);
       final List<dynamic> records = all as List;
       final dossiers = <String>{};
       final todayDossiers = <String>{};
@@ -405,24 +460,37 @@ class EvidenceService {
         final dId = (r['dossier_id']?.toString() ?? '').trim();
         if (dId.isNotEmpty) dossiers.add(dId);
         final capturedAt = DateTime.tryParse(r['captured_at'] ?? '')?.toLocal();
-        if (capturedAt != null && capturedAt.year == today.year && capturedAt.month == today.month && capturedAt.day == today.day) {
+        if (capturedAt != null &&
+            capturedAt.year == today.year &&
+            capturedAt.month == today.month &&
+            capturedAt.day == today.day) {
           if (dId.isNotEmpty) todayDossiers.add(dId);
         }
       }
-      return {'photos': records.length, 'dossiers': dossiers.length, 'today': todayDossiers.length};
+      return {
+        'photos': records.length,
+        'dossiers': dossiers.length,
+        'today': todayDossiers.length,
+      };
     } catch (_) {
       return {'photos': 0, 'dossiers': 0, 'today': 0};
     }
   }
 
-  Future<void> saveQueuePersistence(List<LocalEvidence> queue, {String? dossierId, String? interventionType}) async {
+  Future<void> saveQueuePersistence(
+    List<LocalEvidence> queue, {
+    String? dossierId,
+    String? interventionType,
+  }) async {
     final tempDir = await getTemporaryDirectory();
     final file = File('${tempDir.path}/mission_draft.json');
-    await file.writeAsString(jsonEncode({
-      'queue': queue.map((e) => e.toJson()).toList(),
-      'dossierId': dossierId,
-      'interventionType': interventionType,
-    }));
+    await file.writeAsString(
+      jsonEncode({
+        'queue': queue.map((e) => e.toJson()).toList(),
+        'dossierId': dossierId,
+        'interventionType': interventionType,
+      }),
+    );
   }
 
   Future<List<LocalEvidence>> loadQueuePersistence() async {
@@ -431,9 +499,12 @@ class EvidenceService {
       final file = File('${tempDir.path}/mission_draft.json');
       if (await file.exists()) {
         final raw = jsonDecode(await file.readAsString());
-        if (raw is List) return raw.map((e) => LocalEvidence.fromJson(e)).toList();
+        if (raw is List)
+          return raw.map((e) => LocalEvidence.fromJson(e)).toList();
         if (raw is Map && raw['queue'] is List) {
-          return (raw['queue'] as List).map((e) => LocalEvidence.fromJson(e)).toList();
+          return (raw['queue'] as List)
+              .map((e) => LocalEvidence.fromJson(e))
+              .toList();
         }
       }
     } catch (_) {}
@@ -446,7 +517,11 @@ class EvidenceService {
       final file = File('${tempDir.path}/mission_draft.json');
       if (await file.exists()) {
         final raw = jsonDecode(await file.readAsString());
-        if (raw is Map) return {'dossierId': raw['dossierId'] as String?, 'interventionType': raw['interventionType'] as String?};
+        if (raw is Map)
+          return {
+            'dossierId': raw['dossierId'] as String?,
+            'interventionType': raw['interventionType'] as String?,
+          };
       }
     } catch (_) {}
     return {};
@@ -464,89 +539,159 @@ class EvidenceService {
 
   Future<String> _getAddress(double lat, double lon) async {
     try {
-      try { await setLocaleIdentifier('ar_MA'); } catch (_) {}
+      try {
+        await setLocaleIdentifier('ar_MA');
+      } catch (_) {}
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
       if (placemarks.isNotEmpty) {
         final p = placemarks.first;
-        String zone = (p.subLocality?.isNotEmpty == true) ? p.subLocality! : (p.thoroughfare?.isNotEmpty == true ? p.thoroughfare! : p.subAdministrativeArea ?? '');
-        return [zone, p.locality].where((e) => e != null && e.isNotEmpty).join('، ');
+        String zone = (p.subLocality?.isNotEmpty == true)
+            ? p.subLocality!
+            : (p.thoroughfare?.isNotEmpty == true
+                  ? p.thoroughfare!
+                  : p.subAdministrativeArea ?? '');
+        return [
+          zone,
+          p.locality,
+        ].where((e) => e != null && e.isNotEmpty).join('، ');
       }
     } catch (_) {}
     return '';
   }
 
-  Future<File> processImage(File originalFile, {required String dossierId, required String interventionType, required Position position, required DateTime timestamp}) async {
+  Future<File> processImage(
+    File originalFile, {
+    required String dossierId,
+    required String interventionType,
+    required Position position,
+    required DateTime timestamp,
+  }) async {
     final bytes = await originalFile.readAsBytes();
     final codec = await ui.instantiateImageCodec(bytes, targetWidth: 1200);
     final frame = await codec.getNextFrame();
     final ui.Image image = frame.image;
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()));
+    final canvas = Canvas(
+      recorder,
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+    );
 
     canvas.drawImage(image, Offset.zero, Paint());
 
     try {
-    // === Draw Round Logo ===
-    final logoData = await rootBundle.load('assets/images/logo.png');
-    final ui.Codec logoCodec = await ui.instantiateImageCodec(logoData.buffer.asUint8List());
-    final ui.FrameInfo logoFrame = await logoCodec.getNextFrame();
-    final ui.Image logo = logoFrame.image;
+      // === Draw Round Logo ===
+      final logoData = await rootBundle.load('assets/images/logo.png');
+      final ui.Codec logoCodec = await ui.instantiateImageCodec(
+        logoData.buffer.asUint8List(),
+      );
+      final ui.FrameInfo logoFrame = await logoCodec.getNextFrame();
+      final ui.Image logo = logoFrame.image;
 
-    final double scale = image.width / 1200;
-    final double logoSize = 180 * scale; 
-    final double margin = 40 * scale;
+      final double scale = image.width / 1200;
+      final double logoSize = 180 * scale;
+      final double margin = 40 * scale;
 
-    final rect = Rect.fromLTWH(margin, margin, logoSize, logoSize);
-    
-    canvas.saveLayer(rect, Paint());
-    
-    // Circular clip
-    canvas.clipPath(Path()..addOval(rect));
+      final rect = Rect.fromLTWH(margin, margin, logoSize, logoSize);
 
-    // Fill with white background (optional but often looks better for logos)
-    // canvas.drawPaint(Paint()..color = Colors.white);
+      canvas.saveLayer(rect, Paint());
 
-    // Draw logo (fill the circle)
-    final double srcSize = logo.width < logo.height ? logo.width.toDouble() : logo.height.toDouble();
-    final double srcX = (logo.width - srcSize) / 2;
-    final double srcY = (logo.height - srcSize) / 2;
+      // Circular clip
+      canvas.clipPath(Path()..addOval(rect));
 
-    canvas.drawImageRect(
-      logo,
-      Rect.fromLTWH(srcX, srcY, srcSize, srcSize),
-      rect,
-      Paint()..filterQuality = ui.FilterQuality.high,
-    );
+      // Fill with white background (optional but often looks better for logos)
+      // canvas.drawPaint(Paint()..color = Colors.white);
 
-    canvas.restore();
+      // Draw logo (fill the circle)
+      final double srcSize = logo.width < logo.height
+          ? logo.width.toDouble()
+          : logo.height.toDouble();
+      final double srcX = (logo.width - srcSize) / 2;
+      final double srcY = (logo.height - srcSize) / 2;
+
+      canvas.drawImageRect(
+        logo,
+        Rect.fromLTWH(srcX, srcY, srcSize, srcSize),
+        rect,
+        Paint()..filterQuality = ui.FilterQuality.high,
+      );
+
+      canvas.restore();
     } catch (_) {}
 
     int rectHeight = 130;
-    canvas.drawRect(Rect.fromLTWH(0, image.height.toDouble() - rectHeight, image.width.toDouble(), rectHeight.toDouble()), Paint()..color = Colors.black.withOpacity(0.6));
+    canvas.drawRect(
+      Rect.fromLTWH(
+        0,
+        image.height.toDouble() - rectHeight,
+        image.width.toDouble(),
+        rectHeight.toDouble(),
+      ),
+      Paint()..color = Colors.black.withOpacity(0.6),
+    );
 
     final address = await _getAddress(position.latitude, position.longitude);
     final dateStr = _formatDateArabic(timestamp);
-    final locStr = '${position.latitude.toStringAsFixed(5)}, ${position.longitude.toStringAsFixed(5)}';
+    final locStr =
+        '${position.latitude.toStringAsFixed(5)}, ${position.longitude.toStringAsFixed(5)}';
     final fullLocStr = address.isNotEmpty ? '$address | $locStr' : locStr;
 
-    final datePainter = TextPainter(text: TextSpan(text: dateStr, style: const TextStyle(color: Colors.white, fontSize: 32, fontFamily: 'Cairo', fontWeight: FontWeight.bold)), textDirection: TextDirection.rtl);
+    final datePainter = TextPainter(
+      text: TextSpan(
+        text: dateStr,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 32,
+          fontFamily: 'Cairo',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textDirection: TextDirection.rtl,
+    );
     datePainter.layout(maxWidth: image.width.toDouble() - 40);
 
-    final locPainter = TextPainter(text: TextSpan(text: fullLocStr, style: const TextStyle(color: Colors.amber, fontSize: 26, fontFamily: 'Cairo', fontWeight: FontWeight.bold)), textDirection: TextDirection.rtl);
+    final locPainter = TextPainter(
+      text: TextSpan(
+        text: fullLocStr,
+        style: const TextStyle(
+          color: Colors.amber,
+          fontSize: 26,
+          fontFamily: 'Cairo',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      textDirection: TextDirection.rtl,
+    );
     locPainter.layout(maxWidth: image.width.toDouble() - 40);
 
-    double dateY = image.height.toDouble() - rectHeight + 20; // Plus d'espace en haut
-    datePainter.paint(canvas, Offset(image.width.toDouble() - 20 - datePainter.width, dateY));
-    locPainter.paint(canvas, Offset(image.width.toDouble() - 20 - locPainter.width, dateY + datePainter.height + 8)); // Plus d'espace entre les lignes
+    double dateY =
+        image.height.toDouble() - rectHeight + 20; // Plus d'espace en haut
+    datePainter.paint(
+      canvas,
+      Offset(image.width.toDouble() - 20 - datePainter.width, dateY),
+    );
+    locPainter.paint(
+      canvas,
+      Offset(
+        image.width.toDouble() - 20 - locPainter.width,
+        dateY + datePainter.height + 8,
+      ),
+    ); // Plus d'espace entre les lignes
 
-    final finalImage = await (recorder.endRecording()).toImage(image.width, image.height);
-    
+    final finalImage = await (recorder.endRecording()).toImage(
+      image.width,
+      image.height,
+    );
+
     // RAM Optimization: Use raw RGBA instead of intermediate PNG encoding
-    final byteData = await finalImage.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final byteData = await finalImage.toByteData(
+      format: ui.ImageByteFormat.rawRgba,
+    );
     if (byteData == null) throw Exception("Failed to get byte data from image");
 
     final tempDir = await getTemporaryDirectory();
-    final file = File('${tempDir.path}/final_${DateTime.now().millisecondsSinceEpoch}.jpg');
+    final file = File(
+      '${tempDir.path}/final_${DateTime.now().millisecondsSinceEpoch}.jpg',
+    );
 
     // Create img.Image directly from raw bytes (much faster and less RAM than PNG intermediate)
     final decodedImage = img.Image.fromBytes(
@@ -557,11 +702,11 @@ class EvidenceService {
     );
 
     await file.writeAsBytes(img.encodeJpg(decodedImage, quality: 50));
-    
+
     // Cleanup UI images explicitly to help GC
     image.dispose();
     finalImage.dispose();
-    
+
     return file;
   }
 }

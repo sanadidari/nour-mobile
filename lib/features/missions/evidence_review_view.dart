@@ -51,11 +51,21 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
     for (int i = 0; i < widget.queue.length; i++) {
       final pos = widget.queue[i].position;
       try {
-        final placemarks = await placemarkFromCoordinates(pos.latitude, pos.longitude);
+        final placemarks = await placemarkFromCoordinates(
+          pos.latitude,
+          pos.longitude,
+        );
         if (placemarks.isNotEmpty) {
           final p = placemarks.first;
-          String zone = (p.subLocality?.isNotEmpty == true) ? p.subLocality! : (p.thoroughfare?.isNotEmpty == true ? p.thoroughfare! : p.subAdministrativeArea ?? '');
-          final list = [zone, p.locality].where((e) => e != null && e.isNotEmpty).toList();
+          String zone = (p.subLocality?.isNotEmpty == true)
+              ? p.subLocality!
+              : (p.thoroughfare?.isNotEmpty == true
+                    ? p.thoroughfare!
+                    : p.subAdministrativeArea ?? '');
+          final list = [
+            zone,
+            p.locality,
+          ].where((e) => e != null && e.isNotEmpty).toList();
           if (mounted) setState(() => _addresses[i] = list.join('، '));
         }
       } catch (_) {}
@@ -73,7 +83,10 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
       );
       await Share.shareXFiles([XFile(processed.path)], text: title);
     } catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('خطأ في المشاركة: $e')));
+      if (mounted)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('خطأ في المشاركة: $e')));
     }
   }
 
@@ -105,7 +118,11 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(backgroundColor: Colors.red, content: Text('خطأ في الحفظ: $e'), duration: const Duration(seconds: 5)),
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('خطأ في الحفظ: $e'),
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     } finally {
@@ -124,12 +141,20 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: _buildWatermarkedImage(File(ev.localPath), ev, address, fit: BoxFit.contain),
+              child: _buildWatermarkedImage(
+                File(ev.localPath),
+                ev,
+                address,
+                fit: BoxFit.contain,
+              ),
             ),
             const SizedBox(height: 12),
             CircleAvatar(
               backgroundColor: Colors.white,
-              child: IconButton(icon: const Icon(LucideIcons.x), onPressed: () => Navigator.pop(context)),
+              child: IconButton(
+                icon: const Icon(LucideIcons.x),
+                onPressed: () => Navigator.pop(context),
+              ),
             ),
           ],
         ),
@@ -137,24 +162,49 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
     );
   }
 
-  Widget _buildWatermarkedImage(File file, LocalEvidence ev, String address, {double? height, BoxFit fit = BoxFit.cover}) {
+  Widget _buildWatermarkedImage(
+    File file,
+    LocalEvidence ev,
+    String address, {
+    double? height,
+    BoxFit fit = BoxFit.cover,
+  }) {
     final dateStr = formatDateArabic(ev.timestamp);
-    String locStr = '${ev.position.latitude.toStringAsFixed(5)}, ${ev.position.longitude.toStringAsFixed(5)}';
+    String locStr =
+        '${ev.position.latitude.toStringAsFixed(5)}, ${ev.position.longitude.toStringAsFixed(5)}';
     if (address.isNotEmpty) locStr = '$address | $locStr';
 
     return Stack(
       children: [
-        SizedBox(width: double.infinity, height: height, child: Image.file(file, fit: fit)),
+        SizedBox(
+          width: double.infinity,
+          height: height,
+          child: Image.file(file, fit: fit),
+        ),
         Positioned(
-          top: 10, left: 10,
+          top: 10,
+          left: 10,
           child: Container(
-            width: 50, height: 50,
-            decoration: const BoxDecoration(shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)]),
-            child: ClipOval(child: Image.asset('assets/images/logo.png', width: 32, height: 32, fit: BoxFit.cover)),
+            width: 50,
+            height: 50,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 32,
+                height: 32,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
         Positioned(
-          bottom: 0, left: 0, right: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
           child: Container(
             color: Colors.black.withOpacity(0.6),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -164,9 +214,24 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(dateStr, style: GoogleFonts.cairo(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                  Text(
+                    dateStr,
+                    style: GoogleFonts.cairo(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   const SizedBox(height: 2),
-                  Text(locStr, style: GoogleFonts.cairo(color: Colors.amber, fontSize: 12, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
+                  Text(
+                    locStr,
+                    style: GoogleFonts.cairo(
+                      color: Colors.amber,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textDirection: TextDirection.rtl,
+                  ),
                 ],
               ),
             ),
@@ -197,7 +262,14 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                 SectionCard(
                   icon: LucideIcons.fileText,
                   title: 'نوع التدخل',
-                  child: Text(widget.interventionType, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: context.appColors.primaryNavy)),
+                  child: Text(
+                    widget.interventionType,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: context.appColors.primaryNavy,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -205,7 +277,15 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                 SectionCard(
                   icon: LucideIcons.hash,
                   title: 'رقم الملف',
-                  child: Text(widget.dossierId, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: context.appColors.accentGold, letterSpacing: 1.5)),
+                  child: Text(
+                    widget.dossierId,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: context.appColors.accentGold,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -222,14 +302,32 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(LucideIcons.chevronLeft, size: 16, color: context.appColors.accentGold),
+                              Icon(
+                                LucideIcons.chevronLeft,
+                                size: 16,
+                                color: context.appColors.accentGold,
+                              ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(entry.key, style: TextStyle(fontSize: 12, color: context.appColors.textMuted, fontWeight: FontWeight.w500)),
-                                    Text(entry.value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: context.appColors.textPrimary)),
+                                    Text(
+                                      entry.key,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: context.appColors.textMuted,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      entry.value,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: context.appColors.textPrimary,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -251,13 +349,19 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                       final index = entry.key;
                       final ev = entry.value;
                       final file = File(ev.localPath);
-                      final dateStr = DateFormat('yyyy/MM/dd - HH:mm:ss').format(ev.timestamp);
+                      final dateStr = DateFormat(
+                        'yyyy/MM/dd - HH:mm:ss',
+                      ).format(ev.timestamp);
                       final lat = ev.position.latitude.toStringAsFixed(6);
                       final lon = ev.position.longitude.toStringAsFixed(6);
-                      final hasGps = ev.position.latitude != 0 || ev.position.longitude != 0;
+                      final hasGps =
+                          ev.position.latitude != 0 ||
+                          ev.position.longitude != 0;
 
                       return Container(
-                        margin: EdgeInsets.only(bottom: index < widget.queue.length - 1 ? 16 : 0),
+                        margin: EdgeInsets.only(
+                          bottom: index < widget.queue.length - 1 ? 16 : 0,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: context.appColors.border),
@@ -266,15 +370,29 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                         child: Column(
                           children: [
                             GestureDetector(
-                              onTap: () => _showFullImage(ev, _addresses[index] ?? ''),
+                              onTap: () =>
+                                  _showFullImage(ev, _addresses[index] ?? ''),
                               child: ClipRRect(
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(12),
+                                ),
                                 child: file.existsSync()
-                                    ? _buildWatermarkedImage(file, ev, _addresses[index] ?? '', height: 200)
+                                    ? _buildWatermarkedImage(
+                                        file,
+                                        ev,
+                                        _addresses[index] ?? '',
+                                        height: 200,
+                                      )
                                     : Container(
                                         height: 200,
                                         color: context.appColors.bgSurface,
-                                        child: Center(child: Icon(LucideIcons.imageOff, size: 48, color: context.appColors.textMuted)),
+                                        child: Center(
+                                          child: Icon(
+                                            LucideIcons.imageOff,
+                                            size: 48,
+                                            color: context.appColors.textMuted,
+                                          ),
+                                        ),
                                       ),
                               ),
                             ),
@@ -285,29 +403,66 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                                   Row(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                        decoration: BoxDecoration(color: context.appColors.primaryNavy, borderRadius: BorderRadius.circular(20)),
-                                        child: Text('صورة ${index + 1}', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: context.appColors.primaryNavy,
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'صورة ${index + 1}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                       const Spacer(),
                                       IconButton(
-                                        icon: const Icon(LucideIcons.share2, size: 18, color: Colors.blue),
-                                        onPressed: () => _shareLocalImage(ev, 'صورة من ملف ${widget.dossierId} - ${widget.interventionType}'),
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                        icon: const Icon(
+                                          LucideIcons.share2,
+                                          size: 18,
+                                          color: Colors.blue,
+                                        ),
+                                        onPressed: () => _shareLocalImage(
+                                          ev,
+                                          'صورة من ملف ${widget.dossierId} - ${widget.interventionType}',
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                        ),
                                         constraints: const BoxConstraints(),
                                       ),
                                       const SizedBox(width: 8),
-                                      Icon(LucideIcons.zoomIn, size: 16, color: context.appColors.textMuted),
+                                      Icon(
+                                        LucideIcons.zoomIn,
+                                        size: 16,
+                                        color: context.appColors.textMuted,
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-                                  MetadataRow(icon: LucideIcons.clock, label: 'التوقيت', value: dateStr, color: Colors.blue),
+                                  MetadataRow(
+                                    icon: LucideIcons.clock,
+                                    label: 'التوقيت',
+                                    value: dateStr,
+                                    color: Colors.blue,
+                                  ),
                                   const SizedBox(height: 6),
                                   MetadataRow(
                                     icon: LucideIcons.mapPin,
                                     label: 'الإحداثيات',
-                                    value: hasGps ? '$lat, $lon' : 'GPS غير متوفر',
-                                    color: hasGps ? Colors.green : Colors.orange,
+                                    value: hasGps
+                                        ? '$lat, $lon'
+                                        : 'GPS غير متوفر',
+                                    color: hasGps
+                                        ? Colors.green
+                                        : Colors.orange,
                                   ),
                                 ],
                               ),
@@ -337,9 +492,19 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                       children: [
                         const CircularProgressIndicator(),
                         const SizedBox(height: 20),
-                        Text('جاري الإرسال...', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: context.appColors.textPrimary)),
+                        Text(
+                          'جاري الإرسال...',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: context.appColors.textPrimary,
+                          ),
+                        ),
                         const SizedBox(height: 8),
-                        Text('الرجاء عدم إغلاق التطبيق', style: TextStyle(color: context.appColors.textMuted)),
+                        Text(
+                          'الرجاء عدم إغلاق التطبيق',
+                          style: TextStyle(color: context.appColors.textMuted),
+                        ),
                       ],
                     ),
                   ),
@@ -354,13 +519,21 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: context.appColors.bgCard,
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, -2))],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: Row(
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: _isSending ? null : () => Navigator.pop(context, false),
+                onPressed: _isSending
+                    ? null
+                    : () => Navigator.pop(context, false),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: context.appColors.textSecondary,
                   padding: const EdgeInsets.all(16),
@@ -382,7 +555,10 @@ class _EvidenceReviewViewState extends ConsumerState<EvidenceReviewView> {
                   elevation: 3,
                 ),
                 icon: const Icon(LucideIcons.send),
-                label: const Text('تأكيد وإرسال', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                label: const Text(
+                  'تأكيد وإرسال',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],

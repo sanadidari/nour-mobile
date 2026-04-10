@@ -28,8 +28,14 @@ class _DirectoryViewState extends State<DirectoryView> {
     final query = _searchController.text.toLowerCase();
     setState(() {
       _filteredHuissiers = huissiersData.where((h) {
-        final matchesSearch = h.name.contains(query) || (h.frenchName?.toLowerCase().contains(query) ?? false) || h.phone.contains(query);
-        final matchesCourt = _selectedCourt == null || _selectedCourt == 'الكل' || h.court == _selectedCourt;
+        final matchesSearch =
+            h.name.contains(query) ||
+            (h.frenchName?.toLowerCase().contains(query) ?? false) ||
+            h.phone.contains(query);
+        final matchesCourt =
+            _selectedCourt == null ||
+            _selectedCourt == 'الكل' ||
+            h.court == _selectedCourt;
         return matchesSearch && matchesCourt;
       }).toList();
     });
@@ -45,7 +51,7 @@ class _DirectoryViewState extends State<DirectoryView> {
   Widget _buildSmartPhoto(String originalPath) {
     // RESOLVEUR INTELLIGENT d'IMAGES (jfif, png, jpg, jpeg)
     final String basePath = originalPath.split('.').first;
-    
+
     return Image.asset(
       originalPath,
       width: 48,
@@ -74,7 +80,10 @@ class _DirectoryViewState extends State<DirectoryView> {
                       backgroundColor: Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset('assets/images/logo.png', fit: BoxFit.contain),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     );
                   },
@@ -111,7 +120,11 @@ class _DirectoryViewState extends State<DirectoryView> {
                     textAlign: TextAlign.right,
                     decoration: InputDecoration(
                       hintText: 'بحث بالاسم أو الهاتف...',
-                      prefixIcon: Icon(LucideIcons.search, size: 18, color: context.appColors.textMuted),
+                      prefixIcon: Icon(
+                        LucideIcons.search,
+                        size: 18,
+                        color: context.appColors.textMuted,
+                      ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(vertical: 10),
                     ),
@@ -123,12 +136,21 @@ class _DirectoryViewState extends State<DirectoryView> {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: _courts.length,
-                    separatorBuilder: (context, index) => const SizedBox(width: 8),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final court = _courts[index];
                       final isSelected = (_selectedCourt ?? 'الكل') == court;
                       return ChoiceChip(
-                        label: Text(court, style: TextStyle(fontSize: 12, color: isSelected ? Colors.white : context.appColors.textSecondary)),
+                        label: Text(
+                          court,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: isSelected
+                                ? Colors.white
+                                : context.appColors.textSecondary,
+                          ),
+                        ),
                         selected: isSelected,
                         selectedColor: context.appColors.accentGold,
                         backgroundColor: context.appColors.bgSurface,
@@ -152,9 +174,16 @@ class _DirectoryViewState extends State<DirectoryView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(LucideIcons.userX, size: 48, color: context.appColors.textMuted),
+                  Icon(
+                    LucideIcons.userX,
+                    size: 48,
+                    color: context.appColors.textMuted,
+                  ),
                   const SizedBox(height: 16),
-                  Text('لا توجد نتائج', style: TextStyle(color: context.appColors.textMuted)),
+                  Text(
+                    'لا توجد نتائج',
+                    style: TextStyle(color: context.appColors.textMuted),
+                  ),
                 ],
               ),
             )
@@ -165,41 +194,68 @@ class _DirectoryViewState extends State<DirectoryView> {
                 final h = _filteredHuissiers[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     leading: h.photoUrl != null && h.photoUrl!.isNotEmpty
-                        ? ClipOval(
-                            child: _buildSmartPhoto(h.photoUrl!),
-                          )
+                        ? ClipOval(child: _buildSmartPhoto(h.photoUrl!))
                         : CircleAvatar(
                             backgroundColor: Colors.white,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Image.asset('assets/images/logo.png', fit: BoxFit.contain),
+                              child: Image.asset(
+                                'assets/images/logo.png',
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
-                    title: Text(h.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text(
+                      h.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(LucideIcons.building, size: 14, color: context.appColors.textMuted),
+                            Icon(
+                              LucideIcons.building,
+                              size: 14,
+                              color: context.appColors.textMuted,
+                            ),
                             const SizedBox(width: 4),
-                            Text(h.court, style: TextStyle(fontSize: 12, color: context.appColors.textMuted)),
+                            Text(
+                              h.court,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: context.appColors.textMuted,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            Icon(LucideIcons.phone, size: 14, color: context.appColors.accentGold),
+                            Icon(
+                              LucideIcons.phone,
+                              size: 14,
+                              color: context.appColors.accentGold,
+                            ),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 h.phone,
-                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: context.appColors.accentGold),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: context.appColors.accentGold,
+                                ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -215,7 +271,11 @@ class _DirectoryViewState extends State<DirectoryView> {
                           color: Colors.green.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(LucideIcons.phoneCall, color: Colors.green, size: 20),
+                        child: const Icon(
+                          LucideIcons.phoneCall,
+                          color: Colors.green,
+                          size: 20,
+                        ),
                       ),
                       onPressed: () => _makeCall(h.phone),
                     ),

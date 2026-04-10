@@ -61,13 +61,20 @@ class _MainScreenState extends State<MainScreen> {
               onTap: (index) => setState(() => _currentIndex = index),
               type: BottomNavigationBarType.fixed,
               selectedItemColor: Colors.black, // Sleek Black
-              unselectedItemColor: Colors.black.withOpacity(0.45), // Subtle Dark Gray
+              unselectedItemColor: Colors.black.withOpacity(
+                0.45,
+              ), // Subtle Dark Gray
               backgroundColor: Colors.transparent,
               elevation: 0,
               selectedFontSize: 11,
               unselectedFontSize: 11,
-              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              unselectedLabelStyle: TextStyle(color: Colors.black.withOpacity(0.45)),
+              selectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              unselectedLabelStyle: TextStyle(
+                color: Colors.black.withOpacity(0.45),
+              ),
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(LucideIcons.home),
@@ -116,12 +123,7 @@ class CouncilTabsView extends StatelessWidget {
             labelColor: Colors.white,
           ),
         ),
-        body: const TabBarView(
-          children: [
-            CouncilView(),
-            DirectoryView(),
-          ],
-        ),
+        body: const TabBarView(children: [CouncilView(), DirectoryView()]),
       ),
     );
   }
@@ -133,7 +135,7 @@ class LibraryTabsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, 
+      length: 2,
       child: Scaffold(
         extendBody: true,
         appBar: AppBar(
@@ -149,12 +151,7 @@ class LibraryTabsView extends StatelessWidget {
             labelColor: Colors.white,
           ),
         ),
-        body: const TabBarView(
-          children: [
-            MaktabaView(),
-            QuickLinksView(),
-          ],
-        ),
+        body: const TabBarView(children: [MaktabaView(), QuickLinksView()]),
       ),
     );
   }
@@ -166,7 +163,7 @@ class BailiffSpaceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, 
+      length: 2,
       child: Scaffold(
         extendBody: true,
         appBar: AppBar(
@@ -182,12 +179,7 @@ class BailiffSpaceView extends StatelessWidget {
             labelColor: Colors.white,
           ),
         ),
-        body: const TabBarView(
-          children: [
-            DashboardView(),
-            ProfileView(),
-          ],
-        ),
+        body: const TabBarView(children: [DashboardView(), ProfileView()]),
       ),
     );
   }

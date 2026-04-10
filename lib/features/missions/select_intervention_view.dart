@@ -25,11 +25,17 @@ class SelectInterventionView extends StatelessWidget {
     );
   }
 
-  Widget _buildInterventionCard(BuildContext context, GharadOption option, int index) {
+  Widget _buildInterventionCard(
+    BuildContext context,
+    GharadOption option,
+    int index,
+  ) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => InterventionFormView(option: option)),
+          MaterialPageRoute(
+            builder: (context) => InterventionFormView(option: option),
+          ),
         );
       },
       child: Container(
@@ -54,7 +60,9 @@ class SelectInterventionView extends StatelessWidget {
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                     child: Image.asset(
                       option.bannerPath,
                       height: 180,
@@ -66,11 +74,16 @@ class SelectInterventionView extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Colors.black.withOpacity(0.6), Colors.transparent],
+                          colors: [
+                            Colors.black.withOpacity(0.6),
+                            Colors.transparent,
+                          ],
                           begin: Alignment.bottomCenter,
                           end: Alignment.center,
                         ),
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
                       ),
                     ),
                   ),
@@ -82,14 +95,20 @@ class SelectInterventionView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.white.withOpacity(0.3)),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
+                        ),
                       ),
-                      child: Icon(_getIconForOption(option.title), color: Colors.white, size: 24),
+                      child: Icon(
+                        _getIconForOption(option.title),
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ],
               ),
-            
+
             // Content
             Padding(
               padding: const EdgeInsets.all(24),
@@ -119,7 +138,10 @@ class SelectInterventionView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: context.appColors.accentGold.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(30),
@@ -135,7 +157,11 @@ class SelectInterventionView extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 6),
-                            Icon(LucideIcons.arrowLeft, size: 16, color: context.appColors.accentGold),
+                            Icon(
+                              LucideIcons.arrowLeft,
+                              size: 16,
+                              color: context.appColors.accentGold,
+                            ),
                           ],
                         ),
                       ),

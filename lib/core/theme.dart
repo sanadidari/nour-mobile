@@ -34,9 +34,18 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: colors.bgDark,
       textTheme: GoogleFonts.cairoTextTheme().copyWith(
-        displayLarge: GoogleFonts.cairo(fontWeight: FontWeight.bold, color: colors.textPrimary),
-        headlineMedium: GoogleFonts.cairo(fontWeight: FontWeight.w600, color: colors.textPrimary),
-        titleLarge: GoogleFonts.cairo(fontWeight: FontWeight.w600, color: colors.textPrimary),
+        displayLarge: GoogleFonts.cairo(
+          fontWeight: FontWeight.bold,
+          color: colors.textPrimary,
+        ),
+        headlineMedium: GoogleFonts.cairo(
+          fontWeight: FontWeight.w600,
+          color: colors.textPrimary,
+        ),
+        titleLarge: GoogleFonts.cairo(
+          fontWeight: FontWeight.w600,
+          color: colors.textPrimary,
+        ),
         bodyLarge: GoogleFonts.cairo(color: colors.textPrimary),
         bodyMedium: GoogleFonts.cairo(color: colors.textSecondary),
       ),
@@ -50,9 +59,7 @@ class AppTheme {
           fontWeight: FontWeight.bold,
           color: colors.textPrimary,
         ),
-        shape: Border(
-          bottom: BorderSide(color: colors.border, width: 0.5),
-        ),
+        shape: Border(bottom: BorderSide(color: colors.border, width: 0.5)),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
@@ -67,8 +74,13 @@ class AppTheme {
           backgroundColor: colors.accentGold,
           foregroundColor: colors.primaryNavy,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          textStyle: GoogleFonts.cairo(fontWeight: FontWeight.bold, fontSize: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          textStyle: GoogleFonts.cairo(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
           elevation: 0,
         ),
       ),
@@ -76,7 +88,9 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: colors.textSecondary,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           side: BorderSide(color: colors.borderLight),
           textStyle: GoogleFonts.cairo(fontWeight: FontWeight.w600),
         ),
@@ -98,7 +112,10 @@ class AppTheme {
         ),
         labelStyle: GoogleFonts.cairo(color: colors.textMuted),
         hintStyle: GoogleFonts.cairo(color: colors.textMuted),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
       ),
       listTileTheme: ListTileThemeData(
         tileColor: colors.bgCard,
@@ -116,7 +133,11 @@ class AppTheme {
       dialogTheme: DialogThemeData(
         backgroundColor: colors.bgCard,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        titleTextStyle: GoogleFonts.cairo(fontSize: 18, fontWeight: FontWeight.bold, color: colors.textPrimary),
+        titleTextStyle: GoogleFonts.cairo(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: colors.textPrimary,
+        ),
         contentTextStyle: GoogleFonts.cairo(color: colors.textSecondary),
       ),
       bottomSheetTheme: BottomSheetThemeData(
@@ -130,7 +151,9 @@ class AppTheme {
         backgroundColor: colors.accentGold,
         foregroundColor: colors.primaryNavy,
         elevation: 4,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: colors.accentGold,

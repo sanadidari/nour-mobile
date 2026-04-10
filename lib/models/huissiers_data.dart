@@ -161,7 +161,8 @@ const List<Huissier> huissiersData = [
     court: 'ابتدائية تطوان',
     phone: '0661571339',
     email: 'olayachi.huissier@gmail.com',
-    address: 'شارع محمد الحصناوي إقامة أحلام الطابق 2 المكتب رقم 4 حي الولاية تطوان',
+    address:
+        'شارع محمد الحصناوي إقامة أحلام الطابق 2 المكتب رقم 4 حي الولاية تطوان',
     decision: '2025/1842',
     photoUrl: 'assets/images/huissiers/14.jpeg',
   ),
@@ -191,7 +192,8 @@ const List<Huissier> huissiersData = [
     court: 'ابتدائية تطوان',
     phone: '0661378668 / 0667130682',
     email: 'Hjsbaijamal@gmail.com',
-    address: 'شارع محمد الحصناوي إقامة أحلام الطابق 3 المكتب رقم 05 حي الولاية تطوان',
+    address:
+        'شارع محمد الحصناوي إقامة أحلام الطابق 3 المكتب رقم 05 حي الولاية تطوان',
     decision: '2025/1837',
     photoUrl: 'assets/images/huissiers/17.jpeg',
   ),
@@ -648,7 +650,8 @@ const List<Huissier> huissiersData = [
     court: 'ابتدائية شفشاون',
     phone: '0660573288',
     email: 'saifhuissier97@gmail.com',
-    address: 'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
+    address:
+        'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
     decision: '27087',
     photoUrl: 'assets/images/huissiers/62.jpeg',
   ),
@@ -658,7 +661,8 @@ const List<Huissier> huissiersData = [
     court: 'ابتدائية شفشاون',
     phone: '0654581904',
     email: 'Mohammedmakoudi161@gmail.com',
-    address: 'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
+    address:
+        'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
     decision: '2025/465',
     photoUrl: 'assets/images/huissiers/63.jpeg',
   ),
@@ -668,7 +672,8 @@ const List<Huissier> huissiersData = [
     court: 'ابتدائية شفشاون',
     phone: '0666783630',
     email: 'samirbenhdaida.Huissier@gmail.com',
-    address: 'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
+    address:
+        'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
     decision: '2025/467',
     photoUrl: 'assets/images/huissiers/64.jpeg',
   ),
@@ -698,7 +703,8 @@ const List<Huissier> huissiersData = [
     court: 'ابتدائية شفشاون',
     phone: '0721650292',
     email: 'houssamelhousni4@gmail.com',
-    address: 'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
+    address:
+        'شارع مولاي عبد السلام وشارع المشيشي الحي الإداري ط 2 الشقة ر 5 شفشاون',
     decision: '2025/580',
     photoUrl: 'assets/images/huissiers/67.jpeg',
   ),
@@ -793,5 +799,5 @@ const List<Huissier> huissiersData = [
     address: 'الشقة رقم 1 الطابق الأرضي حي الغدير تجزئة الفرح رقم 10 وزان',
     decision: '2025/586',
     photoUrl: 'assets/images/huissiers/76.jpeg',
-  )
+  ),
 ];

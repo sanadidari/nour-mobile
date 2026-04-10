@@ -26,9 +26,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
       await authService.signIn(_emailController.text, _passwordController.text);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('خطأ: ${e.toString()}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('خطأ: ${e.toString()}')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -46,7 +46,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
             children: [
               // Logo avec glow
               ClipOval(
-                child: Image.asset('assets/images/logo.png', width: 100, height: 100, fit: BoxFit.cover),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(height: 24),
 
@@ -63,7 +68,10 @@ class _LoginViewState extends ConsumerState<LoginView> {
               const SizedBox(height: 4),
               Text(
                 'فضاء المفوض القضائي',
-                style: TextStyle(fontSize: 14, color: context.appColors.textMuted),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: context.appColors.textMuted,
+                ),
               ),
 
               const SizedBox(height: 40),
@@ -74,7 +82,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 style: TextStyle(color: context.appColors.textPrimary),
                 decoration: InputDecoration(
                   labelText: 'البريد الإلكتروني',
-                  prefixIcon: Icon(LucideIcons.mail, size: 18, color: context.appColors.accentGold.withOpacity(0.7)),
+                  prefixIcon: Icon(
+                    LucideIcons.mail,
+                    size: 18,
+                    color: context.appColors.accentGold.withOpacity(0.7),
+                  ),
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
@@ -86,14 +98,19 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 style: TextStyle(color: context.appColors.textPrimary),
                 decoration: InputDecoration(
                   labelText: 'كلمة المرور',
-                  prefixIcon: Icon(LucideIcons.lock, size: 18, color: context.appColors.accentGold.withOpacity(0.7)),
+                  prefixIcon: Icon(
+                    LucideIcons.lock,
+                    size: 18,
+                    color: context.appColors.accentGold.withOpacity(0.7),
+                  ),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword ? LucideIcons.eyeOff : LucideIcons.eye,
                       size: 18,
                       color: context.appColors.textMuted,
                     ),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
                 ),
                 obscureText: _obscurePassword,
@@ -111,14 +128,20 @@ class _LoginViewState extends ConsumerState<LoginView> {
                       ? SizedBox(
                           width: 22,
                           height: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: context.appColors.primaryNavy),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: context.appColors.primaryNavy,
+                          ),
                         )
                       : const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(LucideIcons.logIn, size: 18),
                             SizedBox(width: 8),
-                            Text('تسجيل الدخول', style: TextStyle(fontSize: 16)),
+                            Text(
+                              'تسجيل الدخول',
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ],
                         ),
                 ),
@@ -129,11 +152,18 @@ class _LoginViewState extends ConsumerState<LoginView> {
               // Register link
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegisterView()));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const RegisterView(),
+                    ),
+                  );
                 },
                 child: Text.rich(
                   TextSpan(
-                    style: GoogleFonts.cairo(fontSize: 14, color: context.appColors.textMuted),
+                    style: GoogleFonts.cairo(
+                      fontSize: 14,
+                      color: context.appColors.textMuted,
+                    ),
                     children: [
                       const TextSpan(text: 'ليس لديك حساب؟ '),
                       TextSpan(
@@ -142,7 +172,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           color: context.appColors.accentGold,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
-                          decorationColor: context.appColors.accentGold.withOpacity(0.5),
+                          decorationColor: context.appColors.accentGold
+                              .withOpacity(0.5),
                         ),
                       ),
                     ],

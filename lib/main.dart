@@ -11,17 +11,13 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ar', null);
-  
+
   await Supabase.initialize(
     url: AppConstants.supabaseUrl,
     anonKey: AppConstants.supabaseAnonKey,
   );
 
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -32,7 +28,7 @@ class MyApp extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     return GestureDetector(
       onTap: () {
-         FocusManager.instance.primaryFocus?.unfocus();
+        FocusManager.instance.primaryFocus?.unfocus();
       },
       child: MaterialApp(
         title: 'نور للعدالة',
@@ -41,9 +37,7 @@ class MyApp extends ConsumerWidget {
         themeMode: themeMode,
         debugShowCheckedModeBanner: false,
         locale: const Locale('ar'),
-        supportedLocales: const [
-          Locale('ar'),
-        ],
+        supportedLocales: const [Locale('ar')],
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -51,7 +45,9 @@ class MyApp extends ConsumerWidget {
         ],
         builder: (context, child) {
           return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.noScaling),
             child: child!,
           );
         },
@@ -60,4 +56,3 @@ class MyApp extends ConsumerWidget {
     );
   }
 }
-

@@ -136,11 +136,11 @@ class _HistoryViewState extends State<HistoryView> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredHistory.isEmpty
-                    ? _buildEmptyState()
-                    : RefreshIndicator(
-                        onRefresh: _loadHistory,
-                        child: _buildHistoryList(),
-                      ),
+                ? _buildEmptyState()
+                : RefreshIndicator(
+                    onRefresh: _loadHistory,
+                    child: _buildHistoryList(),
+                  ),
           ),
         ],
       ),
@@ -154,9 +154,19 @@ class _HistoryViewState extends State<HistoryView> {
         children: [
           Icon(LucideIcons.inbox, size: 64, color: context.appColors.textMuted),
           const SizedBox(height: 16),
-          Text('لا توجد عمليات بعد', style: TextStyle(fontSize: 18, color: context.appColors.textSecondary, fontWeight: FontWeight.w500)),
+          Text(
+            'لا توجد عمليات بعد',
+            style: TextStyle(
+              fontSize: 18,
+              color: context.appColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text('ستظهر هنا العمليات بعد إتمام أول مهمة', style: TextStyle(fontSize: 14, color: context.appColors.textMuted)),
+          Text(
+            'ستظهر هنا العمليات بعد إتمام أول مهمة',
+            style: TextStyle(fontSize: 14, color: context.appColors.textMuted),
+          ),
         ],
       ),
     );
@@ -166,7 +176,8 @@ class _HistoryViewState extends State<HistoryView> {
     // Regrouper par dossier
     final grouped = <String, List<Map<String, dynamic>>>{};
     for (var item in _filteredHistory) {
-      final dossier = item['dossier_id'] ?? extractDossierFromNotes(item['notes'] ?? '');
+      final dossier =
+          item['dossier_id'] ?? extractDossierFromNotes(item['notes'] ?? '');
       grouped.putIfAbsent(dossier, () => []);
       grouped[dossier]!.add(item);
     }
@@ -178,14 +189,22 @@ class _HistoryViewState extends State<HistoryView> {
         final dossierId = grouped.keys.elementAt(index);
         final items = grouped[dossierId]!;
         final firstItem = items.first;
-        final interventionType = firstItem['intervention_type'] ?? extractTypeFromNotes(firstItem['notes'] ?? '');
-        final capturedAt = DateTime.tryParse(firstItem['captured_at'] ?? '')?.toLocal();
-        final dateStr = capturedAt != null ? DateFormat('yyyy/MM/dd - HH:mm').format(capturedAt) : '---';
+        final interventionType =
+            firstItem['intervention_type'] ??
+            extractTypeFromNotes(firstItem['notes'] ?? '');
+        final capturedAt = DateTime.tryParse(
+          firstItem['captured_at'] ?? '',
+        )?.toLocal();
+        final dateStr = capturedAt != null
+            ? DateFormat('yyyy/MM/dd - HH:mm').format(capturedAt)
+            : '---';
 
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             onTap: () => Navigator.of(context).push(
@@ -210,7 +229,11 @@ class _HistoryViewState extends State<HistoryView> {
                           color: context.appColors.primaryNavy.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Icon(getIconForType(interventionType), color: context.appColors.primaryNavy, size: 22),
+                        child: Icon(
+                          getIconForType(interventionType),
+                          color: context.appColors.primaryNavy,
+                          size: 22,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -218,21 +241,33 @@ class _HistoryViewState extends State<HistoryView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              interventionType.isNotEmpty ? interventionType : 'عملية',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              interventionType.isNotEmpty
+                                  ? interventionType
+                                  : 'عملية',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 2),
                             Text(
                               'ملف: $dossierId',
-                              style: TextStyle(fontSize: 13, color: context.appColors.accentGold, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: context.appColors.accentGold,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: context.appColors.success.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20),
@@ -240,9 +275,20 @@ class _HistoryViewState extends State<HistoryView> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(LucideIcons.camera, size: 14, color: context.appColors.success),
+                            Icon(
+                              LucideIcons.camera,
+                              size: 14,
+                              color: context.appColors.success,
+                            ),
                             const SizedBox(width: 4),
-                            Text('${items.length}', style: TextStyle(color: context.appColors.success, fontWeight: FontWeight.bold, fontSize: 13)),
+                            Text(
+                              '${items.length}',
+                              style: TextStyle(
+                                color: context.appColors.success,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -251,20 +297,44 @@ class _HistoryViewState extends State<HistoryView> {
                   const Divider(height: 20),
                   Row(
                     children: [
-                      Icon(LucideIcons.clock, size: 14, color: context.appColors.textMuted),
+                      Icon(
+                        LucideIcons.clock,
+                        size: 14,
+                        color: context.appColors.textMuted,
+                      ),
                       const SizedBox(width: 6),
-                      Text(dateStr, style: TextStyle(fontSize: 12, color: context.appColors.textSecondary)),
+                      Text(
+                        dateStr,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: context.appColors.textSecondary,
+                        ),
+                      ),
                       const Spacer(),
                       if (hasValidGps(firstItem))
                         Row(
                           children: [
-                            Icon(LucideIcons.mapPin, size: 14, color: context.appColors.success),
+                            Icon(
+                              LucideIcons.mapPin,
+                              size: 14,
+                              color: context.appColors.success,
+                            ),
                             const SizedBox(width: 4),
-                            Text('GPS ✓', style: TextStyle(fontSize: 12, color: context.appColors.success)),
+                            Text(
+                              'GPS ✓',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: context.appColors.success,
+                              ),
+                            ),
                           ],
                         ),
                       const SizedBox(width: 8),
-                      Icon(LucideIcons.chevronLeft, size: 16, color: context.appColors.textMuted),
+                      Icon(
+                        LucideIcons.chevronLeft,
+                        size: 16,
+                        color: context.appColors.textMuted,
+                      ),
                     ],
                   ),
                 ],

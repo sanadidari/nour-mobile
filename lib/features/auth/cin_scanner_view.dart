@@ -111,7 +111,9 @@ class _CinScannerViewState extends State<CinScannerView> {
       );
 
       await _cameraController!.initialize();
-      try { await _cameraController!.setFocusMode(FocusMode.auto); } catch (_) {}
+      try {
+        await _cameraController!.setFocusMode(FocusMode.auto);
+      } catch (_) {}
 
       if (mounted) {
         setState(() => _isInitialized = true);
@@ -124,7 +126,8 @@ class _CinScannerViewState extends State<CinScannerView> {
   }
 
   void _startDetection() {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) return;
+    if (_cameraController == null || !_cameraController!.value.isInitialized)
+      return;
     if (_cameraController!.value.isStreamingImages) return;
     _stableFrames = 0;
     _detectionProgress = 0;
@@ -135,7 +138,8 @@ class _CinScannerViewState extends State<CinScannerView> {
 
   void _processFrame(CameraImage image) {
     if (_isProcessing) return;
-    if (_phase != ScanPhase.scanningRecto && _phase != ScanPhase.scanningVerso) return;
+    if (_phase != ScanPhase.scanningRecto && _phase != ScanPhase.scanningVerso)
+      return;
 
     _frameSkip++;
     if (_frameSkip % 4 != 0) return;
@@ -145,7 +149,10 @@ class _CinScannerViewState extends State<CinScannerView> {
     try {
       final quality = _analyzeQuality(image);
 
-      if (!mounted) { _isProcessing = false; return; }
+      if (!mounted) {
+        _isProcessing = false;
+        return;
+      }
 
       final cardDetected = quality['hasCard'] as bool;
       final sharp = quality['isSharp'] as bool;
@@ -174,7 +181,12 @@ class _CinScannerViewState extends State<CinScannerView> {
         }
       } else {
         _stableFrames = max(0, _stableFrames - 2);
-        setState(() => _detectionProgress = max(0, _stableFrames / _requiredStableFrames));
+        setState(
+          () => _detectionProgress = max(
+            0,
+            _stableFrames / _requiredStableFrames,
+          ),
+        );
       }
     } catch (_) {}
 
@@ -207,7 +219,14 @@ class _CinScannerViewState extends State<CinScannerView> {
 
         if (idxDown >= bytes.length || idxRight >= bytes.length) continue;
 
-        final lap = (4 * bytes[idx] - bytes[idxUp] - bytes[idxDown] - bytes[idxLeft] - bytes[idxRight]).abs().toDouble();
+        final lap =
+            (4 * bytes[idx] -
+                    bytes[idxUp] -
+                    bytes[idxDown] -
+                    bytes[idxLeft] -
+                    bytes[idxRight])
+                .abs()
+                .toDouble();
         lapSum += lap;
         lapSumSq += lap * lap;
         lapCount++;
@@ -234,10 +253,7 @@ class _CinScannerViewState extends State<CinScannerView> {
 
     double edgeDensity = innerCount > 0 ? innerEdges / innerCount : 0;
 
-    return {
-      'hasCard': edgeDensity > 0.06,
-      'isSharp': sharpness > 150,
-    };
+    return {'hasCard': edgeDensity > 0.06, 'isSharp': sharpness > 150};
   }
 
   // =======================================================
@@ -285,10 +301,14 @@ class _CinScannerViewState extends State<CinScannerView> {
   Future<void> _manualCapture() async {
     if (_cameraController == null || !_isSharp || !_hasCard) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(!_hasCard ? 'البطاقة غير مكتشفة' : 'الصورة غير واضحة، ثبّت يدك'),
-          duration: const Duration(seconds: 2),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              !_hasCard ? 'البطاقة غير مكتشفة' : 'الصورة غير واضحة، ثبّت يدك',
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
       }
       return;
     }
@@ -328,7 +348,8 @@ class _CinScannerViewState extends State<CinScannerView> {
     final folder = Directory('${dir.path}/cin_scans');
     if (!await folder.exists()) await folder.create(recursive: true);
     final side = isRecto ? 'recto' : 'verso';
-    final destPath = '${folder.path}/cin_${side}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final destPath =
+        '${folder.path}/cin_${side}_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
     if (textBlockCount >= 3 && maxX > minX && maxY > minY) {
       // Ajouter un padding de 8% autour des blocs de texte
@@ -342,7 +363,13 @@ class _CinScannerViewState extends State<CinScannerView> {
       final cropW = (textW + padX * 2).clamp(1, imgW - cropX);
       final cropH = (textH + padY * 2).clamp(1, imgH - cropY);
 
-      final cropped = img.copyCrop(decoded, x: cropX, y: cropY, width: cropW, height: cropH);
+      final cropped = img.copyCrop(
+        decoded,
+        x: cropX,
+        y: cropY,
+        width: cropW,
+        height: cropH,
+      );
       croppedFile = File(destPath);
       await croppedFile.writeAsBytes(img.encodeJpg(cropped, quality: 95));
     } else {
@@ -352,7 +379,13 @@ class _CinScannerViewState extends State<CinScannerView> {
       final cropX = ((imgW - cardW) / 2).toInt();
       final cropY = ((imgH - cardH) / 2).toInt().clamp(0, imgH - cardH);
 
-      final cropped = img.copyCrop(decoded, x: cropX, y: cropY, width: cardW, height: cardH);
+      final cropped = img.copyCrop(
+        decoded,
+        x: cropX,
+        y: cropY,
+        width: cardW,
+        height: cardH,
+      );
       croppedFile = File(destPath);
       await croppedFile.writeAsBytes(img.encodeJpg(cropped, quality: 95));
     }
@@ -380,13 +413,19 @@ class _CinScannerViewState extends State<CinScannerView> {
 
   /// Parse les données du RECTO — priorité au MRZ (zone machine en bas)
   void _parseRectoData(String text) {
-    final lines = text.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty).toList();
+    final lines = text
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty)
+        .toList();
 
     // === 1. Chercher la zone MRZ (lignes avec <<< ou IDMAR) ===
     final mrzLines = <String>[];
     for (var line in lines) {
       final cleaned = line.replaceAll(' ', '').toUpperCase();
-      if (cleaned.contains('<<<') || cleaned.startsWith('IDMAR') || cleaned.startsWith('1DMAR')) {
+      if (cleaned.contains('<<<') ||
+          cleaned.startsWith('IDMAR') ||
+          cleaned.startsWith('1DMAR')) {
         mrzLines.add(cleaned);
       }
     }
@@ -400,7 +439,8 @@ class _CinScannerViewState extends State<CinScannerView> {
     final longLines = <String>[];
     for (var line in lines) {
       final cleaned = line.replaceAll(' ', '').toUpperCase();
-      if (cleaned.length > 20 && (cleaned.contains('<') || cleaned.contains('MAR'))) {
+      if (cleaned.length > 20 &&
+          (cleaned.contains('<') || cleaned.contains('MAR'))) {
         longLines.add(cleaned);
       }
     }
@@ -466,7 +506,18 @@ class _CinScannerViewState extends State<CinScannerView> {
   /// Extraction classique (si MRZ non trouvé)
   void _parseRectoClassic(List<String> lines) {
     // Ignorer les titres de la carte
-    final ignorePatterns = ['ROYAUME', 'MAROC', 'CARTE', 'NATIONALE', 'IDENTITE', 'البطاقة', 'المملكة', 'المغربية', 'الوطنية', 'للتعريف'];
+    final ignorePatterns = [
+      'ROYAUME',
+      'MAROC',
+      'CARTE',
+      'NATIONALE',
+      'IDENTITE',
+      'البطاقة',
+      'المملكة',
+      'المغربية',
+      'الوطنية',
+      'للتعريف',
+    ];
 
     // Numéro CIN
     for (var line in lines) {
@@ -480,9 +531,12 @@ class _CinScannerViewState extends State<CinScannerView> {
 
     // Date
     for (var line in lines) {
-      final dateMatch = RegExp(r'(\d{2})[/.\-\s](\d{2})[/.\-\s](\d{4})').firstMatch(line);
+      final dateMatch = RegExp(
+        r'(\d{2})[/.\-\s](\d{2})[/.\-\s](\d{4})',
+      ).firstMatch(line);
       if (dateMatch != null) {
-        _cinData.dateOfBirth = '${dateMatch.group(1)}/${dateMatch.group(2)}/${dateMatch.group(3)}';
+        _cinData.dateOfBirth =
+            '${dateMatch.group(1)}/${dateMatch.group(2)}/${dateMatch.group(3)}';
         break;
       }
     }
@@ -492,7 +546,9 @@ class _CinScannerViewState extends State<CinScannerView> {
     for (var line in lines) {
       final cleaned = line.replaceAll(RegExp(r'[^A-Za-zÀ-ÿ\s]'), '').trim();
       if (cleaned.length < 2 || cleaned.length > 30) continue;
-      final isTitle = ignorePatterns.any((p) => cleaned.toUpperCase().contains(p));
+      final isTitle = ignorePatterns.any(
+        (p) => cleaned.toUpperCase().contains(p),
+      );
       if (!isTitle && cleaned.toUpperCase() != cleaned.toLowerCase()) {
         nameLines.add(cleaned);
       }
@@ -502,12 +558,18 @@ class _CinScannerViewState extends State<CinScannerView> {
   }
 
   void _parseVersoData(String text) {
-    final lines = text.split('\n').map((l) => l.trim()).where((l) => l.isNotEmpty).toList();
+    final lines = text
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty)
+        .toList();
 
     // Adresse — ligne la plus longue avec des chiffres
     String bestAddress = '';
     for (var line in lines) {
-      if (line.contains(RegExp(r'\d')) && line.length > 10 && line.length > bestAddress.length) {
+      if (line.contains(RegExp(r'\d')) &&
+          line.length > 10 &&
+          line.length > bestAddress.length) {
         if (!line.contains('<<<') && !line.contains('IDMAR')) {
           bestAddress = line;
         }
@@ -516,7 +578,29 @@ class _CinScannerViewState extends State<CinScannerView> {
     if (bestAddress.isNotEmpty) _cinData.address = bestAddress;
 
     // Ville
-    final cities = ['Casablanca', 'Rabat', 'Marrakech', 'Fes', 'Tanger', 'Agadir', 'Meknes', 'Kenitra', 'Oujda', 'Tetouan', 'Safi', 'El Jadida', 'Mohammedia', 'Sale', 'Nador', 'Beni Mellal', 'Khouribga', 'Settat', 'Berrechid', 'Taza', 'Temara'];
+    final cities = [
+      'Casablanca',
+      'Rabat',
+      'Marrakech',
+      'Fes',
+      'Tanger',
+      'Agadir',
+      'Meknes',
+      'Kenitra',
+      'Oujda',
+      'Tetouan',
+      'Safi',
+      'El Jadida',
+      'Mohammedia',
+      'Sale',
+      'Nador',
+      'Beni Mellal',
+      'Khouribga',
+      'Settat',
+      'Berrechid',
+      'Taza',
+      'Temara',
+    ];
     for (var line in lines) {
       for (var city in cities) {
         if (line.toUpperCase().contains(city.toUpperCase())) {
@@ -536,14 +620,20 @@ class _CinScannerViewState extends State<CinScannerView> {
     _cinData.rectoImage = _tempCapturedImage;
     // Lire les infos DEPUIS l'image croppée propre
     await _readCroppedCard(_tempCapturedImage!, true);
-    setState(() { _tempCapturedImage = null; _phase = ScanPhase.waitForFlip; });
+    setState(() {
+      _tempCapturedImage = null;
+      _phase = ScanPhase.waitForFlip;
+    });
   }
 
   Future<void> _confirmVersoPhoto() async {
     if (_tempCapturedImage == null) return;
     _cinData.versoImage = _tempCapturedImage;
     await _readCroppedCard(_tempCapturedImage!, false);
-    setState(() { _tempCapturedImage = null; _phase = ScanPhase.done; });
+    setState(() {
+      _tempCapturedImage = null;
+      _phase = ScanPhase.done;
+    });
     await Future.delayed(const Duration(milliseconds: 500));
     if (mounted) Navigator.of(context).pop(_cinData);
   }
@@ -588,14 +678,22 @@ class _CinScannerViewState extends State<CinScannerView> {
 
   String _getTitle() {
     switch (_phase) {
-      case ScanPhase.scanningRecto: return 'مسح الوجه الأمامي';
-      case ScanPhase.processingRecto: return 'جاري الاستخراج...';
-      case ScanPhase.confirmRecto: return 'تأكيد الوجه الأمامي';
-      case ScanPhase.waitForFlip: return 'اقلب البطاقة';
-      case ScanPhase.scanningVerso: return 'مسح الوجه الخلفي';
-      case ScanPhase.processingVerso: return 'جاري الاستخراج...';
-      case ScanPhase.confirmVerso: return 'تأكيد الوجه الخلفي';
-      case ScanPhase.done: return 'تم!';
+      case ScanPhase.scanningRecto:
+        return 'مسح الوجه الأمامي';
+      case ScanPhase.processingRecto:
+        return 'جاري الاستخراج...';
+      case ScanPhase.confirmRecto:
+        return 'تأكيد الوجه الأمامي';
+      case ScanPhase.waitForFlip:
+        return 'اقلب البطاقة';
+      case ScanPhase.scanningVerso:
+        return 'مسح الوجه الخلفي';
+      case ScanPhase.processingVerso:
+        return 'جاري الاستخراج...';
+      case ScanPhase.confirmVerso:
+        return 'تأكيد الوجه الخلفي';
+      case ScanPhase.done:
+        return 'تم!';
     }
   }
 
@@ -613,7 +711,9 @@ class _CinScannerViewState extends State<CinScannerView> {
       case ScanPhase.waitForFlip:
         return _buildFlipScreen();
       case ScanPhase.done:
-        return Center(child: CircularProgressIndicator(color: context.appColors.accentGold));
+        return Center(
+          child: CircularProgressIndicator(color: context.appColors.accentGold),
+        );
     }
   }
 
@@ -625,11 +725,27 @@ class _CinScannerViewState extends State<CinScannerView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: context.appColors.accentGold, strokeWidth: 3),
+            CircularProgressIndicator(
+              color: context.appColors.accentGold,
+              strokeWidth: 3,
+            ),
             SizedBox(height: 24),
-            Text('جاري استخراج البطاقة...', style: TextStyle(color: context.appColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+            Text(
+              'جاري استخراج البطاقة...',
+              style: TextStyle(
+                color: context.appColors.textPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             SizedBox(height: 8),
-            Text('الرجاء الانتظار', style: TextStyle(color: context.appColors.textMuted, fontSize: 13)),
+            Text(
+              'الرجاء الانتظار',
+              style: TextStyle(
+                color: context.appColors.textMuted,
+                fontSize: 13,
+              ),
+            ),
           ],
         ),
       ),
@@ -645,7 +761,10 @@ class _CinScannerViewState extends State<CinScannerView> {
           children: [
             CircularProgressIndicator(color: context.appColors.accentGold),
             SizedBox(height: 16),
-            Text('جاري تشغيل الكاميرا...', style: TextStyle(color: Colors.white70)),
+            Text(
+              'جاري تشغيل الكاميرا...',
+              style: TextStyle(color: Colors.white70),
+            ),
           ],
         ),
       );
@@ -658,13 +777,19 @@ class _CinScannerViewState extends State<CinScannerView> {
         // Cadre
         Positioned.fill(
           child: CustomPaint(
-            painter: _CardFramePainter(progress: _detectionProgress, hasCard: _hasCard, isSharp: _isSharp),
+            painter: _CardFramePainter(
+              progress: _detectionProgress,
+              hasCard: _hasCard,
+              isSharp: _isSharp,
+            ),
           ),
         ),
 
         // Indicateurs qualité
         Positioned(
-          top: 12, left: 12, right: 12,
+          top: 12,
+          left: 12,
+          right: 12,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
@@ -676,15 +801,25 @@ class _CinScannerViewState extends State<CinScannerView> {
                 Row(
                   children: [
                     Icon(
-                      _hasCard && _isSharp ? LucideIcons.checkCircle : LucideIcons.info,
-                      color: _hasCard && _isSharp ? context.appColors.success : context.appColors.accentGold,
+                      _hasCard && _isSharp
+                          ? LucideIcons.checkCircle
+                          : LucideIcons.info,
+                      color: _hasCard && _isSharp
+                          ? context.appColors.success
+                          : context.appColors.accentGold,
                       size: 18,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        _qualityMessage.isEmpty ? 'ضع البطاقة داخل الإطار' : _qualityMessage,
-                        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                        _qualityMessage.isEmpty
+                            ? 'ضع البطاقة داخل الإطار'
+                            : _qualityMessage,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -692,7 +827,11 @@ class _CinScannerViewState extends State<CinScannerView> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    _buildQualityBadge('البطاقة', _hasCard, LucideIcons.creditCard),
+                    _buildQualityBadge(
+                      'البطاقة',
+                      _hasCard,
+                      LucideIcons.creditCard,
+                    ),
                     const SizedBox(width: 8),
                     _buildQualityBadge('الوضوح', _isSharp, LucideIcons.focus),
                   ],
@@ -705,7 +844,9 @@ class _CinScannerViewState extends State<CinScannerView> {
         // Barre progression
         if (_hasCard && _isSharp)
           Positioned(
-            bottom: 130, left: 36, right: 36,
+            bottom: 130,
+            left: 36,
+            right: 36,
             child: Column(
               children: [
                 ClipRRect(
@@ -714,7 +855,9 @@ class _CinScannerViewState extends State<CinScannerView> {
                     value: _detectionProgress,
                     backgroundColor: Colors.white12,
                     valueColor: AlwaysStoppedAnimation(
-                      _detectionProgress > 0.6 ? context.appColors.success : context.appColors.accentGold,
+                      _detectionProgress > 0.6
+                          ? context.appColors.success
+                          : context.appColors.accentGold,
                     ),
                     minHeight: 6,
                   ),
@@ -730,37 +873,70 @@ class _CinScannerViewState extends State<CinScannerView> {
 
         // Steps
         Positioned(
-          bottom: 80, left: 0, right: 0,
+          bottom: 80,
+          left: 0,
+          right: 0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildStepDot('الأمامي', _cinData.rectoImage != null, _phase == ScanPhase.scanningRecto),
-              Container(width: 40, height: 2, color: _cinData.rectoImage != null ? context.appColors.success : Colors.white24),
-              _buildStepDot('الخلفي', _cinData.versoImage != null, _phase == ScanPhase.scanningVerso),
+              _buildStepDot(
+                'الأمامي',
+                _cinData.rectoImage != null,
+                _phase == ScanPhase.scanningRecto,
+              ),
+              Container(
+                width: 40,
+                height: 2,
+                color: _cinData.rectoImage != null
+                    ? context.appColors.success
+                    : Colors.white24,
+              ),
+              _buildStepDot(
+                'الخلفي',
+                _cinData.versoImage != null,
+                _phase == ScanPhase.scanningVerso,
+              ),
             ],
           ),
         ),
 
         // Bouton capture manuelle
         Positioned(
-          bottom: 10, left: 0, right: 0,
+          bottom: 10,
+          left: 0,
+          right: 0,
           child: Center(
             child: GestureDetector(
               onTap: _manualCapture,
               child: Container(
-                width: 60, height: 60,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: (_hasCard && _isSharp) ? Colors.white : Colors.white24, width: 3),
+                  border: Border.all(
+                    color: (_hasCard && _isSharp)
+                        ? Colors.white
+                        : Colors.white24,
+                    width: 3,
+                  ),
                 ),
                 child: Center(
                   child: Container(
-                    width: 48, height: 48,
+                    width: 48,
+                    height: 48,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: (_hasCard && _isSharp) ? Colors.white24 : Colors.transparent,
+                      color: (_hasCard && _isSharp)
+                          ? Colors.white24
+                          : Colors.transparent,
                     ),
-                    child: Icon(LucideIcons.camera, color: (_hasCard && _isSharp) ? Colors.white : Colors.white30, size: 22),
+                    child: Icon(
+                      LucideIcons.camera,
+                      color: (_hasCard && _isSharp)
+                          ? Colors.white
+                          : Colors.white30,
+                      size: 22,
+                    ),
                   ),
                 ),
               ),
@@ -776,16 +952,33 @@ class _CinScannerViewState extends State<CinScannerView> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
         decoration: BoxDecoration(
-          color: ok ? context.appColors.success.withOpacity(0.15) : Colors.red.withOpacity(0.15),
+          color: ok
+              ? context.appColors.success.withOpacity(0.15)
+              : Colors.red.withOpacity(0.15),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: ok ? context.appColors.success.withOpacity(0.3) : Colors.red.withOpacity(0.3)),
+          border: Border.all(
+            color: ok
+                ? context.appColors.success.withOpacity(0.3)
+                : Colors.red.withOpacity(0.3),
+          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(ok ? LucideIcons.checkCircle : icon, size: 14, color: ok ? context.appColors.success : Colors.red),
+            Icon(
+              ok ? LucideIcons.checkCircle : icon,
+              size: 14,
+              color: ok ? context.appColors.success : Colors.red,
+            ),
             const SizedBox(width: 4),
-            Text(label, style: TextStyle(fontSize: 11, color: ok ? context.appColors.success : Colors.red, fontWeight: FontWeight.w600)),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                color: ok ? context.appColors.success : Colors.red,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),
@@ -807,7 +1000,9 @@ class _CinScannerViewState extends State<CinScannerView> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: context.appColors.accentGold.withOpacity(0.3)),
+                  border: Border.all(
+                    color: context.appColors.accentGold.withOpacity(0.3),
+                  ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
@@ -826,7 +1021,11 @@ class _CinScannerViewState extends State<CinScannerView> {
                   ? 'هل تم استخراج البطاقة بشكل صحيح؟'
                   : 'هل تم استخراج الوجه الخلفي بشكل صحيح؟',
               textAlign: TextAlign.center,
-              style: TextStyle(color: context.appColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: context.appColors.textPrimary,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -850,14 +1049,22 @@ class _CinScannerViewState extends State<CinScannerView> {
                 Expanded(
                   flex: 2,
                   child: ElevatedButton.icon(
-                    onPressed: isRecto ? _confirmRectoPhoto : _confirmVersoPhoto,
+                    onPressed: isRecto
+                        ? _confirmRectoPhoto
+                        : _confirmVersoPhoto,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       backgroundColor: context.appColors.success,
                       foregroundColor: Colors.white,
                     ),
                     icon: const Icon(LucideIcons.checkCircle, size: 18),
-                    label: const Text('تأكيد ✓', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    label: const Text(
+                      'تأكيد ✓',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -883,7 +1090,10 @@ class _CinScannerViewState extends State<CinScannerView> {
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: context.appColors.success, width: 1.5),
+                border: Border.all(
+                  color: context.appColors.success,
+                  width: 1.5,
+                ),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -897,9 +1107,20 @@ class _CinScannerViewState extends State<CinScannerView> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(LucideIcons.checkCircle, color: context.appColors.success, size: 18),
+                            Icon(
+                              LucideIcons.checkCircle,
+                              color: context.appColors.success,
+                              size: 18,
+                            ),
                             SizedBox(width: 8),
-                            Text('✓ تم استخراج الأمامي', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                            Text(
+                              '✓ تم استخراج الأمامي',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -915,15 +1136,36 @@ class _CinScannerViewState extends State<CinScannerView> {
             decoration: BoxDecoration(
               color: context.appColors.accentGold.withOpacity(0.1),
               shape: BoxShape.circle,
-              border: Border.all(color: context.appColors.accentGold.withOpacity(0.3), width: 2),
+              border: Border.all(
+                color: context.appColors.accentGold.withOpacity(0.3),
+                width: 2,
+              ),
             ),
-            child: Icon(LucideIcons.rotateCcw, size: 48, color: context.appColors.accentGold),
+            child: Icon(
+              LucideIcons.rotateCcw,
+              size: 48,
+              color: context.appColors.accentGold,
+            ),
           ),
           const SizedBox(height: 24),
 
-          Text('اقلب البطاقة الآن', style: TextStyle(color: context.appColors.accentGold, fontSize: 22, fontWeight: FontWeight.bold)),
+          Text(
+            'اقلب البطاقة الآن',
+            style: TextStyle(
+              color: context.appColors.accentGold,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text('ثم اضغط "جاهز" لمسح الوجه الخلفي', textAlign: TextAlign.center, style: TextStyle(color: context.appColors.textSecondary, fontSize: 14)),
+          Text(
+            'ثم اضغط "جاهز" لمسح الوجه الخلفي',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: context.appColors.textSecondary,
+              fontSize: 14,
+            ),
+          ),
 
           const SizedBox(height: 36),
 
@@ -945,15 +1187,28 @@ class _CinScannerViewState extends State<CinScannerView> {
     return Column(
       children: [
         Container(
-          width: 30, height: 30,
+          width: 30,
+          height: 30,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: completed ? context.appColors.success : (active ? context.appColors.accentGold : Colors.white24),
+            color: completed
+                ? context.appColors.success
+                : (active ? context.appColors.accentGold : Colors.white24),
           ),
-          child: Icon(completed ? LucideIcons.check : LucideIcons.creditCard, size: 14, color: Colors.white),
+          child: Icon(
+            completed ? LucideIcons.check : LucideIcons.creditCard,
+            size: 14,
+            color: Colors.white,
+          ),
         ),
         const SizedBox(height: 4),
-        Text(label, style: TextStyle(fontSize: 10, color: active ? Colors.white : Colors.white54)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 10,
+            color: active ? Colors.white : Colors.white54,
+          ),
+        ),
       ],
     );
   }
@@ -965,7 +1220,11 @@ class _CardFramePainter extends CustomPainter {
   final bool hasCard;
   final bool isSharp;
 
-  _CardFramePainter({required this.progress, required this.hasCard, required this.isSharp});
+  _CardFramePainter({
+    required this.progress,
+    required this.hasCard,
+    required this.isSharp,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -993,22 +1252,58 @@ class _CardFramePainter extends CustomPainter {
       borderColor = Colors.white38;
     }
 
-    canvas.drawRRect(rrect, Paint()..color = borderColor..style = PaintingStyle.stroke..strokeWidth = 2.5);
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..color = borderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5,
+    );
 
     final cl = 28.0;
-    final cp = Paint()..color = borderColor..style = PaintingStyle.stroke..strokeWidth = 4.5..strokeCap = StrokeCap.round;
+    final cp = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.5
+      ..strokeCap = StrokeCap.round;
 
     canvas.drawLine(Offset(left + 14, top), Offset(left + 14 + cl, top), cp);
     canvas.drawLine(Offset(left, top + 14), Offset(left, top + 14 + cl), cp);
-    canvas.drawLine(Offset(left + cardWidth - 14, top), Offset(left + cardWidth - 14 - cl, top), cp);
-    canvas.drawLine(Offset(left + cardWidth, top + 14), Offset(left + cardWidth, top + 14 + cl), cp);
-    canvas.drawLine(Offset(left + 14, top + cardHeight), Offset(left + 14 + cl, top + cardHeight), cp);
-    canvas.drawLine(Offset(left, top + cardHeight - 14), Offset(left, top + cardHeight - 14 - cl), cp);
-    canvas.drawLine(Offset(left + cardWidth - 14, top + cardHeight), Offset(left + cardWidth - 14 - cl, top + cardHeight), cp);
-    canvas.drawLine(Offset(left + cardWidth, top + cardHeight - 14), Offset(left + cardWidth, top + cardHeight - 14 - cl), cp);
+    canvas.drawLine(
+      Offset(left + cardWidth - 14, top),
+      Offset(left + cardWidth - 14 - cl, top),
+      cp,
+    );
+    canvas.drawLine(
+      Offset(left + cardWidth, top + 14),
+      Offset(left + cardWidth, top + 14 + cl),
+      cp,
+    );
+    canvas.drawLine(
+      Offset(left + 14, top + cardHeight),
+      Offset(left + 14 + cl, top + cardHeight),
+      cp,
+    );
+    canvas.drawLine(
+      Offset(left, top + cardHeight - 14),
+      Offset(left, top + cardHeight - 14 - cl),
+      cp,
+    );
+    canvas.drawLine(
+      Offset(left + cardWidth - 14, top + cardHeight),
+      Offset(left + cardWidth - 14 - cl, top + cardHeight),
+      cp,
+    );
+    canvas.drawLine(
+      Offset(left + cardWidth, top + cardHeight - 14),
+      Offset(left + cardWidth, top + cardHeight - 14 - cl),
+      cp,
+    );
   }
 
   @override
   bool shouldRepaint(covariant _CardFramePainter old) =>
-      old.progress != progress || old.hasCard != hasCard || old.isSharp != isSharp;
+      old.progress != progress ||
+      old.hasCard != hasCard ||
+      old.isSharp != isSharp;
 }

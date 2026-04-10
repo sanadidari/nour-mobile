@@ -8,15 +8,27 @@ class CouncilMember {
   final String role;
   final IconData icon;
 
-  const CouncilMember({required this.name, required this.role, this.icon = LucideIcons.user});
+  const CouncilMember({
+    required this.name,
+    required this.role,
+    this.icon = LucideIcons.user,
+  });
 }
 
 class CouncilView extends StatelessWidget {
   const CouncilView({super.key});
 
   final List<CouncilMember> _members = const [
-    CouncilMember(name: 'ذ/ نور الدين الشطويطي', role: 'رئيس المجلس', icon: LucideIcons.crown),
-    CouncilMember(name: 'ذ/ محمد علي الحسني', role: 'نائب الرئيس', icon: LucideIcons.userCheck),
+    CouncilMember(
+      name: 'ذ/ نور الدين الشطويطي',
+      role: 'رئيس المجلس',
+      icon: LucideIcons.crown,
+    ),
+    CouncilMember(
+      name: 'ذ/ محمد علي الحسني',
+      role: 'نائب الرئيس',
+      icon: LucideIcons.userCheck,
+    ),
     CouncilMember(name: 'ذ/ محمد علي بن صالح', role: 'الكاتب العام'),
     CouncilMember(name: 'ذ/ عمر العياشي', role: 'أمين المال'),
     CouncilMember(name: 'ذ/ عادل أكبادي', role: 'نائب أمين المال'),
@@ -26,13 +38,17 @@ class CouncilView extends StatelessWidget {
     CouncilMember(name: 'ذ/ عبد الواحد البعبوع', role: 'مستشار'),
   ];
 
-  Widget _buildSmartPhoto(BuildContext context, String? originalPath, bool isPresident) {
+  Widget _buildSmartPhoto(
+    BuildContext context,
+    String? originalPath,
+    bool isPresident,
+  ) {
     if (originalPath == null || originalPath.isEmpty) {
       return _buildPlaceholder(context, isPresident);
     }
 
     final String basePath = originalPath.split('.').first;
-    
+
     return Image.asset(
       originalPath,
       width: 48,
@@ -87,9 +103,7 @@ class CouncilView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('المكتب المسير للمجلس'),
-      ),
+      appBar: AppBar(title: const Text('المكتب المسير للمجلس')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -101,19 +115,39 @@ class CouncilView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: context.appColors.primaryNavy,
                 borderRadius: BorderRadius.circular(24),
-                boxShadow: [BoxShadow(color: context.appColors.primaryNavy.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))],
+                boxShadow: [
+                  BoxShadow(
+                    color: context.appColors.primaryNavy.withOpacity(0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
-                  ClipOval(child: Image.asset('assets/images/logo.png', width: 80, height: 80, fit: BoxFit.cover)),
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   const Text(
                     'المجلس الجهوي للمفوضين القضائيين',
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     'لدى الدائرة الاستئنافية بتطوان',
-                    style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13),
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -128,21 +162,29 @@ class CouncilView extends StatelessWidget {
               itemBuilder: (context, index) {
                 final member = _members[index];
                 final isPresident = index == 0;
-                
-                final String searchName = member.name.replaceAll(RegExp(r'^ذ[ة]?/\s*'), '').trim();
+
+                final String searchName = member.name
+                    .replaceAll(RegExp(r'^ذ[ة]?/\s*'), '')
+                    .trim();
                 final huissierMatches = huissiersData.where((h) {
                   final n1 = h.name.replaceAll(' ', '');
                   final n2 = searchName.replaceAll(' ', '');
                   return n1 == n2;
                 });
-                final String? photoUrl = huissierMatches.isNotEmpty ? huissierMatches.first.photoUrl : null;
+                final String? photoUrl = huissierMatches.isNotEmpty
+                    ? huissierMatches.first.photoUrl
+                    : null;
 
                 return Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: context.appColors.bgSurface,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: isPresident ? context.appColors.accentGold : context.appColors.border),
+                    border: Border.all(
+                      color: isPresident
+                          ? context.appColors.accentGold
+                          : context.appColors.border,
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -154,8 +196,20 @@ class CouncilView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(member.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                            Text(member.role, style: TextStyle(color: context.appColors.textMuted, fontSize: 12)),
+                            Text(
+                              member.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            Text(
+                              member.role,
+                              style: TextStyle(
+                                color: context.appColors.textMuted,
+                                fontSize: 12,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -175,11 +229,19 @@ class CouncilView extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                   _contactRow(context, LucideIcons.mapPin, 'شارع علي يعتة، مركز الولاية (ولاية سنتر)، الطابق 4، تطوان'),
-                   const Divider(height: 24),
-                   _contactRow(context, LucideIcons.mail, 'crhj.tetouan@gmail.com'),
-                   const Divider(height: 24),
-                   _contactRow(context, LucideIcons.phone, '0539.70.00.00'),
+                  _contactRow(
+                    context,
+                    LucideIcons.mapPin,
+                    'شارع علي يعتة، مركز الولاية (ولاية سنتر)، الطابق 4، تطوان',
+                  ),
+                  const Divider(height: 24),
+                  _contactRow(
+                    context,
+                    LucideIcons.mail,
+                    'crhj.tetouan@gmail.com',
+                  ),
+                  const Divider(height: 24),
+                  _contactRow(context, LucideIcons.phone, '0539.70.00.00'),
                 ],
               ),
             ),
