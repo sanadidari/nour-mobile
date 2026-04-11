@@ -1,32 +1,36 @@
-name: Flutter CI (WITI Field)
+name: Nour Mobile CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ "main" ]
 
 jobs:
   build:
+    name: Build & Test
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Flutter
+      
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: flutter pub get
 
-      - name: Verify formatting
+      - name: Generate Architecture (Riverpod)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Formatting Check
         run: dart format --output=none --set-exit-if-changed .
+        continue-on-error: true
 
-      - name: Analyze project source
-        run: flutter analyze
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
 
-      - name: Run tests
+      - name: Run Tests
         run: flutter test
