@@ -218,13 +218,13 @@ class _InterventionFormViewState extends State<InterventionFormView>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // SECTION: موضوع التبليغ OU معلومات الملف
-              _buildSectionHeader(
-                LucideIcons.fileText,
-                isNotification ? 'موضوع التبليغ' : 'معلومات الملف',
+              FormSectionHeader(
+                icon: LucideIcons.fileText,
+                title: isNotification ? 'موضوع التبليغ' : 'معلومات الملف',
               ),
-              _buildFieldStatic(
-                isNotification ? 'المرجع / الرقم' : 'رقم الملف / المرجع',
-                _dossierController,
+              AppTextField(
+                label: isNotification ? 'المرجع / الرقم' : 'رقم الملف / المرجع',
+                controller: _dossierController,
                 isMandatory: true,
                 icon: LucideIcons.hash,
               ),
@@ -236,9 +236,9 @@ class _InterventionFormViewState extends State<InterventionFormView>
                   return Column(
                     children: [
                       const SizedBox(height: 16),
-                      _buildSectionHeader(
-                        LucideIcons.users,
-                        isNotification ? 'أطراف التبليغ' : 'أطراف الإجراء',
+                      FormSectionHeader(
+                        icon: LucideIcons.users,
+                        title: isNotification ? 'أطراف التبليغ' : 'أطراف الإجراء',
                       ),
                       _buildField(field),
                     ],
@@ -253,22 +253,22 @@ class _InterventionFormViewState extends State<InterventionFormView>
                     children: [
                       if (field.label != 'ملاحظات') ...[
                         const SizedBox(height: 16),
-                        _buildSectionHeader(
-                          LucideIcons.clipboardCheck,
-                          isNotification ? 'مآل التبليغ' : 'ملخص للإجراء',
+                        FormSectionHeader(
+                          icon: LucideIcons.clipboardCheck,
+                          title: isNotification ? 'مآل التبليغ' : 'ملخص للإجراء',
                         ),
                       ],
                       if (field.label == 'ملاحظات') ...[
                         const SizedBox(height: 16),
-                        _buildSectionHeader(
-                          LucideIcons.mapPin,
-                          'الموقع الجغرافي',
+                        const FormSectionHeader(
+                          icon: LucideIcons.mapPin,
+                          title: 'الموقع الجغرافي',
                         ),
                         _buildLocationFields(),
                         const SizedBox(height: 16),
-                        _buildSectionHeader(
-                          LucideIcons.clipboardList,
-                          'ملاحظات إضافية',
+                        const FormSectionHeader(
+                          icon: LucideIcons.clipboardList,
+                          title: 'ملاحظات إضافية',
                         ),
                       ],
                       _buildField(field),
@@ -281,13 +281,20 @@ class _InterventionFormViewState extends State<InterventionFormView>
 
               if (_localQueue.isNotEmpty) ...[
                 const SizedBox(height: 32),
-                _buildSectionHeader(
-                  LucideIcons.camera,
-                  'الصور الملتقطة',
+                FormSectionHeader(
+                  icon: LucideIcons.camera,
+                  title: 'الصور الملتقطة',
                   trailing: Text('${_localQueue.length} / $_maxPhotos'),
                 ),
                 const SizedBox(height: 12),
-                _buildPhotoGallery(),
+                InterventionPhotoGallery(
+                  queue: _localQueue,
+                  onRemove: (index) => setState(() {
+                    _localQueue.removeAt(index);
+                    _saveCurrentState();
+                  }),
+                  onPreview: _showImagePreview,
+                ),
               ],
               const SizedBox(height: 120),
             ],
@@ -344,13 +351,14 @@ class _InterventionFormViewState extends State<InterventionFormView>
         'تبليغ قرار',
         'تبليغ مقرر',
       ];
-      return _buildDropdownField(
-        'نوع التبليغ *',
-        _controllers[field.label]?.text.isNotEmpty == true
+      return AppDropdownField(
+        label: 'نوع التبليغ *',
+        value: _controllers[field.label]?.text.isNotEmpty == true
             ? _controllers[field.label]?.text
             : null,
-        types,
-        (val) => setState(() => _controllers[field.label]?.text = val ?? ''),
+        items: types,
+        onChanged: (val) =>
+            setState(() => _controllers[field.label]?.text = val ?? ''),
       );
     }
 
@@ -372,13 +380,14 @@ class _InterventionFormViewState extends State<InterventionFormView>
         'المحكمة التجارية بطنجة',
         'المحكمة الإدارية بطنجة',
       ];
-      return _buildDropdownField(
-        'المحكمة *',
-        _controllers[field.label]?.text.isNotEmpty == true
+      return AppDropdownField(
+        label: 'المحكمة *',
+        value: _controllers[field.label]?.text.isNotEmpty == true
             ? _controllers[field.label]?.text
             : null,
-        courts,
-        (val) => setState(() => _controllers[field.label]?.text = val ?? ''),
+        items: courts,
+        onChanged: (val) =>
+            setState(() => _controllers[field.label]?.text = val ?? ''),
       );
     }
 
@@ -391,16 +400,129 @@ class _InterventionFormViewState extends State<InterventionFormView>
       icon = LucideIcons.alignRight;
     if (field.label.contains('المحكمة')) icon = LucideIcons.landmark;
 
-    return _buildFieldStatic(
-      field.label,
-      _controllers[field.label]!,
+    return AppTextField(
+      label: field.label,
+      controller: _controllers[field.label]!,
       multiline: field.multiline,
       isMandatory: !field.optional,
       icon: icon,
     );
   }
 
-  Widget _buildSectionHeader(IconData icon, String title, {Widget? trailing}) {
+  Widget _buildLocationFields() {
+    final villeCtrl = _controllers['المدينة']!;
+    final zoneCtrl = _controllers['المنطقة / الحي']!;
+    final List<String> villes = [...northCityData.keys, 'أخرى (إدخال يدوي)'];
+
+    return Column(
+      children: [
+        if (!_isManualCity) ...[
+          AppDropdownField(
+            label: 'المدينة *',
+            value:
+                northCityData.containsKey(villeCtrl.text) ? villeCtrl.text : null,
+            items: villes,
+            onChanged: (val) {
+              setState(() {
+                if (val == 'أخرى (إدخال يدوي)') {
+                  _isManualCity = true;
+                  villeCtrl.clear();
+                  _isManualZone = true;
+                  zoneCtrl.clear();
+                } else {
+                  villeCtrl.text = val ?? '';
+                  _isManualZone = false;
+                  zoneCtrl.text = '';
+                }
+              });
+            },
+          ),
+        ] else ...[
+          Row(
+            children: [
+              Expanded(
+                child: AppTextField(
+                  label: 'اسم المدينة يدويًا *',
+                  controller: villeCtrl,
+                  isMandatory: true,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(LucideIcons.rotateCcw),
+                onPressed: () => setState(() {
+                  _isManualCity = false;
+                  _isManualZone = false;
+                  villeCtrl.clear();
+                  zoneCtrl.clear();
+                }),
+              ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 12),
+        if (!_isManualCity && villeCtrl.text.isNotEmpty) ...[
+          if (!_isManualZone) ...[
+            AppDropdownField(
+              label: 'المنطقة / الحي *',
+              value: (northCityData[villeCtrl.text]?.contains(zoneCtrl.text) ??
+                      false)
+                  ? zoneCtrl.text
+                  : null,
+              items: [
+                ...(northCityData[villeCtrl.text] ?? []),
+                'أخرى (إدخال يدوي)'
+              ],
+              onChanged: (val) {
+                setState(() {
+                  if (val == 'أخرى (إدخال يدوي)') {
+                    _isManualZone = true;
+                    zoneCtrl.clear();
+                  } else {
+                    zoneCtrl.text = val ?? '';
+                  }
+                });
+              },
+            ),
+          ] else ...[
+            Row(
+              children: [
+                Expanded(
+                  child: AppTextField(
+                    label: 'المنطقة / الحي يدويًا *',
+                    controller: zoneCtrl,
+                    isMandatory: true,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.rotateCcw),
+                  onPressed: () => setState(() {
+                    _isManualZone = false;
+                    zoneCtrl.clear();
+                  }),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ],
+    );
+  }
+}
+
+class FormSectionHeader extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Widget? trailing;
+
+  const FormSectionHeader({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16, top: 8),
       child: Row(
@@ -423,8 +545,22 @@ class _InterventionFormViewState extends State<InterventionFormView>
       ),
     );
   }
+}
 
-  Widget _buildPhotoGallery() {
+class InterventionPhotoGallery extends StatelessWidget {
+  final List<LocalEvidence> queue;
+  final Function(int) onRemove;
+  final Function(LocalEvidence) onPreview;
+
+  const InterventionPhotoGallery({
+    super.key,
+    required this.queue,
+    required this.onRemove,
+    required this.onPreview,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -433,13 +569,13 @@ class _InterventionFormViewState extends State<InterventionFormView>
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
-      itemCount: _localQueue.length,
+      itemCount: queue.length,
       itemBuilder: (context, index) {
-        final ev = _localQueue[index];
+        final ev = queue[index];
         return Stack(
           children: [
             GestureDetector(
-              onTap: () => _showImagePreview(ev),
+              onTap: () => onPreview(ev),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.file(
@@ -454,10 +590,7 @@ class _InterventionFormViewState extends State<InterventionFormView>
               top: 8,
               left: 8,
               child: GestureDetector(
-                onTap: () => setState(() {
-                  _localQueue.removeAt(index);
-                  _saveCurrentState();
-                }),
+                onTap: () => onRemove(index),
                 child: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: const BoxDecoration(
@@ -477,107 +610,24 @@ class _InterventionFormViewState extends State<InterventionFormView>
       },
     );
   }
+}
 
-  Widget _buildLocationFields() {
-    final villeCtrl = _controllers['المدينة']!;
-    final zoneCtrl = _controllers['المنطقة / الحي']!;
-    final List<String> villes = [...northCityData.keys, 'أخرى (إدخال يدوي)'];
+class AppDropdownField extends StatelessWidget {
+  final String label;
+  final String? value;
+  final List<String> items;
+  final Function(String?) onChanged;
 
-    return Column(
-      children: [
-        if (!_isManualCity) ...[
-          _buildDropdownField(
-            'المدينة *',
-            northCityData.containsKey(villeCtrl.text) ? villeCtrl.text : null,
-            villes,
-            (val) {
-              setState(() {
-                if (val == 'أخرى (إدخال يدوي)') {
-                  _isManualCity = true;
-                  villeCtrl.clear();
-                  _isManualZone = true;
-                  zoneCtrl.clear();
-                } else {
-                  villeCtrl.text = val ?? '';
-                  _isManualZone = false;
-                  zoneCtrl.text = '';
-                }
-              });
-            },
-          ),
-        ] else ...[
-          Row(
-            children: [
-              Expanded(
-                child: _buildFieldStatic(
-                  'اسم المدينة يدويًا *',
-                  villeCtrl,
-                  isMandatory: true,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(LucideIcons.rotateCcw),
-                onPressed: () => setState(() {
-                  _isManualCity = false;
-                  _isManualZone = false;
-                  villeCtrl.clear();
-                  zoneCtrl.clear();
-                }),
-              ),
-            ],
-          ),
-        ],
-        const SizedBox(height: 12),
-        if (!_isManualCity && villeCtrl.text.isNotEmpty) ...[
-          if (!_isManualZone) ...[
-            _buildDropdownField(
-              'المنطقة / الحي *',
-              (northCityData[villeCtrl.text]?.contains(zoneCtrl.text) ?? false)
-                  ? zoneCtrl.text
-                  : null,
-              [...(northCityData[villeCtrl.text] ?? []), 'أخرى (إدخال يدوي)'],
-              (val) {
-                setState(() {
-                  if (val == 'أخرى (إدخال يدوي)') {
-                    _isManualZone = true;
-                    zoneCtrl.clear();
-                  } else {
-                    zoneCtrl.text = val ?? '';
-                  }
-                });
-              },
-            ),
-          ] else ...[
-            Row(
-              children: [
-                Expanded(
-                  child: _buildFieldStatic(
-                    'المنطقة / الحي يدويًا *',
-                    zoneCtrl,
-                    isMandatory: true,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(LucideIcons.rotateCcw),
-                  onPressed: () => setState(() {
-                    _isManualZone = false;
-                    zoneCtrl.clear();
-                  }),
-                ),
-              ],
-            ),
-          ],
-        ],
-      ],
-    );
-  }
+  const AppDropdownField({
+    super.key,
+    required this.label,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+  });
 
-  Widget _buildDropdownField(
-    String label,
-    String? value,
-    List<String> items,
-    Function(String?) onChanged,
-  ) {
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -615,14 +665,26 @@ class _InterventionFormViewState extends State<InterventionFormView>
       ],
     );
   }
+}
 
-  Widget _buildFieldStatic(
-    String label,
-    TextEditingController controller, {
-    bool multiline = false,
-    bool isMandatory = false,
-    IconData? icon,
-  }) {
+class AppTextField extends StatelessWidget {
+  final String label;
+  final TextEditingController controller;
+  final bool multiline;
+  final bool isMandatory;
+  final IconData? icon;
+
+  const AppTextField({
+    super.key,
+    required this.label,
+    required this.controller,
+    this.multiline = false,
+    this.isMandatory = false,
+    this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final cleanLabel = label.replaceAll('*', '').trim();
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
